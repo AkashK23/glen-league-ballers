@@ -1,0 +1,37 @@
+---
+// Bare HTML fragment for one box score, fetched by the slide-out panel in
+// Base.astro. No layout on purpose; styles come from styles/box.css.
+import BoxScore from "../../../components/BoxScore.astro";
+import { type MatchupRow, type SeasonData, boxScores, seasons, url, weekUrl } from "../../../lib/data";
+
+export function getStaticPaths() {
+  return seasons.flatMap((s) => {
+    const kindOrder = { playoff: 0, regular: 1, consolation: 2 } as const;
+    const games = s.matchups
+      .filter((m) => m.away && m.completed)
+      .sort((a, b) => a.week - b.week || kindOrder[a.kind] - kindOrder[b.kind]);
+    return games.map((m) => {
+      // prev/next stay within the same week, in the order the week page uses
+      const sameWeek = games.filter((g) => g.week === m.week);
+      const i = sameWeek.indexOf(m);
+      return {
+        params: { year: String(s.year), id: m.id },
+        props: { season: s, m, prev: sameWeek[i - 1], next: sameWeek[i + 1] },
+      };
+    });
+  });
+}
+
+const { season: s, m, prev, next } = Astro.props as { season: SeasonData; m: MatchupRow; prev?: MatchupRow; next?: MatchupRow };
+const frag = (g?: MatchupRow) => (g ? url(`/box/${s.year}/${g.id}/`) : "");
+---
+
+<div
+  class="box-fragment"
+  data-game={`${s.year}-${m.id}`}
+  data-prev={frag(prev)}
+  data-next={frag(next)}
+  data-full={weekUrl(s.year, m.week, m.id)}
+>
+  <BoxScore season={s} m={m} boxes={boxScores(s.year)[m.id] ?? []} />
+</div>

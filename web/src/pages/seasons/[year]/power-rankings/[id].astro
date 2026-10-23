@@ -1,0 +1,47 @@
+---
+import Base from "../../../../layouts/Base.astro";
+import WrittenRanking from "../../../../components/WrittenRanking.astro";
+import { type SeasonData, type WrittenRanking as Ranking, seasons, url, writtenRankings } from "../../../../lib/data";
+
+export function getStaticPaths() {
+  return seasons.flatMap((s) => {
+    const list = writtenRankings(s.year);
+    return list.map((r, i) => ({
+      params: { year: String(s.year), id: r.id },
+      props: { season: s, ranking: r, prev: list[i - 1], next: list[i + 1] },
+    }));
+  });
+}
+
+const { season: s, ranking: r, prev, next } = Astro.props as { season: SeasonData; ranking: Ranking; prev?: Ranking; next?: Ranking };
+const href = (x: Ranking) => url(`/seasons/${s.year}/power-rankings/${x.id}/`);
+---
+
+<Base
+  title={`${s.year} ${r.title} Power Rankings`}
+  heroTitle={r.title}
+  heroKicker={`${s.year} Power Rankings`}
+  hero="season"
+  crumbs={[{ href: "/seasons", label: "Seasons" }, { href: `/seasons/${s.year}`, label: String(s.year) }, { href: `/seasons/${s.year}#rankings`, label: "Power Rankings" }, { label: r.title }]}
+>
+  <nav class="pager small">
+    {prev ? <a href={href(prev)}>← {prev.title}</a> : <span />}
+    <a href={url(`/seasons/${s.year}#rankings`)}>All {s.year} rankings</a>
+    {next ? <a href={href(next)}>{next.title} →</a> : <span />}
+  </nav>
+
+  <article class="ranking">
+    <WrittenRanking ranking={r} season={s} />
+  </article>
+
+  <nav class="pager bottom small">
+    {prev ? <a href={href(prev)}>← {prev.title}</a> : <span />}
+    {next ? <a href={href(next)}>{next.title} →</a> : <span />}
+  </nav>
+</Base>
+
+<style>
+  .pager { display: flex; justify-content: space-between; gap: 12px; font-weight: 600; margin-bottom: 24px; }
+  .pager.bottom { margin: 40px 0 0; padding-top: 18px; border-top: 1px solid var(--border); }
+  .ranking { max-width: 80ch; margin: 0 auto; }
+</style>

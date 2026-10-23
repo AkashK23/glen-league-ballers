@@ -53,7 +53,7 @@ if (currentSeason) {
             <div class="card">
               <h3>Power rankings · {latestRanking.title}</h3>
               <WrittenRanking ranking={latestRanking} season={currentSeason} limit={3} />
-              <a class="small" href={url(`/seasons/${currentSeason.year}#pr-${latestRanking.id}`)}>Read the full rankings →</a>
+              <a class="small" href={url(`/seasons/${currentSeason.year}/power-rankings/${latestRanking.id}/`)}>Read the full rankings →</a>
             </div>
           )}
           <div class="card">

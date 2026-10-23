@@ -30,7 +30,7 @@ const tidy = (s: string) => {
   <div class="list">
     {
       seasonArticles.map((x) => (
-        <a class="row" href={url(`/seasons/${x.year}#x-${x.id}`)}>
+        <a class="row" href={url(`/seasons/${x.year}/articles/${x.id}/`)}>
           <span class="year">{x.year}</span>
           <span class="t">{tidy(x.title)}</span>
           <span class="go">→</span>

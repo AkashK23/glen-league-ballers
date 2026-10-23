@@ -1,5 +1,5 @@
 ---
-import { type MatchupRow, pts, weekUrl } from "../lib/data";
+import { type MatchupRow, pts, url, weekUrl } from "../lib/data";
 
 interface Props {
   m: MatchupRow;
@@ -11,7 +11,13 @@ const homeWon = m.completed && m.away && m.home.score > m.away.score;
 const awayWon = m.completed && m.away && m.away.score > m.home.score;
 ---
 
-<a class="matchup" href={weekUrl(year, m.week, m.id)} aria-label={`${m.home.owner} vs ${m.away?.owner ?? "bye"}, box score`}>
+<a
+  class="matchup"
+  href={weekUrl(year, m.week, m.id)}
+  data-box={m.away && m.completed ? url(`/box/${year}/${m.id}/`) : undefined}
+  data-game={`${year}-${m.id}`}
+  aria-label={`${m.home.owner} vs ${m.away?.owner ?? "bye"}, box score`}
+>
   {label && <div class="label">{label}{m.weeks > 1 && ` · ${m.weeks} weeks`}</div>}
   <div class:list={["side", { won: homeWon, lost: awayWon }]}>
     <span>{m.home.owner}</span>

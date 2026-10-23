@@ -1,0 +1,30 @@
+---
+import Base from "../../layouts/Base.astro";
+import Trophy from "../../components/Trophy.astro";
+import { pct, record, records, slug, url } from "../../lib/data";
+
+const titles = Object.fromEntries((records.playoffs.most_championships as any[]).map((r) => [r.owner, r.championships]));
+const owners = (records.all_time.career as any[]).slice().sort((a, b) => b.seasons - a.seasons || b.win_pct - a.win_pct);
+---
+
+<Base title="Owners" heroTitle="Owners" heroSub="Everyone who has played in the league">
+  <div class="owners stagger">
+    {
+      owners.map((o) => (
+        <a class="card owner" href={url(`/owners/${slug(o.owner)}`)}>
+          <div class="name">{o.owner}</div>
+          <div class="cups">{Array.from({ length: titles[o.owner] ?? 0 }, () => <Trophy size={34} />)}</div>
+          <div class="muted small">{o.seasons} seasons · {record(o.wins, o.losses, o.ties)} ({pct(o.win_pct)})</div>
+        </a>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .owners { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); }
+  .owner { color: var(--text); display: flex; flex-direction: column; gap: 4px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; }
+  .owner:hover { text-decoration: none; transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 8px 20px rgb(0 0 0 / 0.08); }
+  .name { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; color: var(--heading); }
+  .cups { min-height: 34px; display: flex; gap: 2px; }
+</style>

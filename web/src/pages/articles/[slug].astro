@@ -9,7 +9,7 @@ const { article: a } = Astro.props as { article: (typeof articles)[number] };
 const html = await bodyHtml(a.mod);
 ---
 
-<Base title={a.title} heroTitle={a.subtitle ?? a.title} heroKicker={a.years} hero="records">
+<Base title={a.title} heroTitle={a.title} heroKicker={a.years} heroSub={a.subtitle} hero="records" crumbs={[{ href: "/articles", label: "Articles" }, { label: a.title }]}>
   <p class="small"><a href={url("/articles")}>← All articles</a></p>
   <article class="article">
     <div set:html={html} />

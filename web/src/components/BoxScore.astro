@@ -1,0 +1,96 @@
+---
+// One matchup's box score. Used on week pages and inside the slide-out panel,
+// so its styles live in styles/box.css (classes are bx-prefixed) rather than
+// scoped here: panel content is fetched as a bare fragment with no <head>.
+import { type BoxWeek, type LineupRow, type MatchupRow, type SeasonData, playoffRoundName, pts, slug, url } from "../lib/data";
+
+interface Props {
+  season: SeasonData;
+  m: MatchupRow;
+  boxes: BoxWeek[];
+}
+const { season: s, m, boxes } = Astro.props;
+const away = m.away!;
+const homeWon = m.home.score > away.score;
+
+const starters = (l: LineupRow[]) => l.filter((p) => p.slot !== "BE" && p.slot !== "IR");
+const bench = (l: LineupRow[]) => l.filter((p) => p.slot === "BE" || p.slot === "IR");
+const pairs = (a: LineupRow[], b: LineupRow[]) =>
+  Array.from({ length: Math.max(a.length, b.length) }, (_, i) => [a[i], b[i]] as const);
+const slotLabel = (slot: string) => ({ "RB/WR/TE": "FLEX", "WR/TE": "W/T", "D/ST": "DST" })[slot] ?? slot;
+const sum = (l: LineupRow[]) => l.reduce((t, p) => t + p.pts, 0);
+const label =
+  m.kind === "playoff" ? playoffRoundName(s, m.week) : m.kind === "consolation" ? `Consolation · Week ${m.week}` : `Week ${m.week}`;
+---
+
+<article class="bx" id={`m-${m.id}`}>
+  <div class="bx-kind">
+    <span class:list={["pill", { gold: m.kind === "playoff" }]}>{s.year} · {label}</span>
+    {m.weeks > 1 && <span class="pill">{m.weeks}-week matchup</span>}
+  </div>
+  <header class="bx-score">
+    <div class:list={["bx-team", { won: homeWon }]}>
+      <a class="bx-owner" href={url(`/owners/${slug(m.home.owner)}`)}>{m.home.owner}</a>
+      <span class="bx-tname">{m.home.team_name}</span>
+    </div>
+    <div class="bx-nums">
+      <span class:list={{ won: homeWon }}>{pts(m.home.score)}</span>
+      <span class="bx-dash">–</span>
+      <span class:list={{ won: !homeWon }}>{pts(away.score)}</span>
+    </div>
+    <div class:list={["bx-team", "right", { won: !homeWon }]}>
+      <a class="bx-owner" href={url(`/owners/${slug(away.owner)}`)}>{away.owner}</a>
+      <span class="bx-tname">{away.team_name}</span>
+    </div>
+  </header>
+
+  {boxes.length === 0 && <p class="muted small center">The platform doesn't have player box scores for {s.year}, only final scores.</p>}
+
+  {
+    boxes.map((b) => {
+      const hs = starters(b.home), as = starters(b.away);
+      const best = Math.max(...[...hs, ...as].map((p) => p.pts));
+      return (
+        <div class="bx-lineups">
+          {m.weeks > 1 && <h3>NFL week {b.nfl_week} · {pts(sum(hs))} – {pts(sum(as))}</h3>}
+          <div class="table-wrap">
+            <table class="bx-table">
+              <tbody>
+                {pairs(hs, as).map(([h, a]) => (
+                  <tr>
+                    <td class="bx-player">
+                      {h && <><span class:list={["bx-pname", { mvp: h.pts === best }]}>{h.player}</span><span class="bx-meta">{h.team} {h.pos}</span></>}
+                    </td>
+                    <td class="num bx-pts">{h && <>{pts(h.pts)}{h.proj != null && <span class="bx-proj">{pts(h.proj)}</span>}</>}</td>
+                    <td class="bx-slot">{slotLabel(h?.slot ?? a?.slot ?? "")}</td>
+                    <td class="num bx-pts left">{a && <>{pts(a.pts)}{a.proj != null && <span class="bx-proj">{pts(a.proj)}</span>}</>}</td>
+                    <td class="bx-player right">
+                      {a && <><span class:list={["bx-pname", { mvp: a.pts === best }]}>{a.player}</span><span class="bx-meta">{a.team} {a.pos}</span></>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <details class="bx-bench">
+              <summary>Bench</summary>
+              <table class="bx-table">
+                <tbody>
+                  {pairs(bench(b.home), bench(b.away)).map(([h, a]) => (
+                    <tr>
+                      <td class="bx-player">{h && <><span class="bx-pname">{h.player}</span><span class="bx-meta">{h.team} {h.pos}</span></>}</td>
+                      <td class="num bx-pts">{h && pts(h.pts)}</td>
+                      <td class="bx-slot">{(h?.slot === "IR" || a?.slot === "IR") ? "IR" : "BE"}</td>
+                      <td class="num bx-pts left">{a && pts(a.pts)}</td>
+                      <td class="bx-player right">{a && <><span class="bx-pname">{a.player}</span><span class="bx-meta">{a.team} {a.pos}</span></>}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p class="muted small center">Bench points: {pts(sum(bench(b.home)))} – {pts(sum(bench(b.away)))}</p>
+            </details>
+          </div>
+        </div>
+      );
+    })
+  }
+</article>

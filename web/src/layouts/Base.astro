@@ -1,18 +1,25 @@
 ---
 import "../styles/global.css";
+import "../styles/box.css";
 import { league, seasons, url } from "../lib/data";
 
+interface Crumb {
+  href?: string;
+  label: string;
+}
 interface Props {
   title?: string;
   heroTitle: string;
   heroSub?: string;
   heroKicker?: string;
   hero?: string; // image key: src/assets/hero/<key>.jpg, falls back to "default", then a drawn background
-  tall?: boolean;
+  tall?: boolean; // big animated banner (home page); every other page gets a slim one
+  crumbs?: Crumb[]; // "Seasons › 2021 › Week 5"
 }
-const { title, heroTitle, heroSub, heroKicker, hero = "default", tall = false } = Astro.props;
+const { title, heroTitle, heroSub, heroKicker, hero = "default", tall = false, crumbs = [] } = Astro.props;
 const pageTitle = title ? `${title} · ${league.name}` : league.name;
 const path = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ""), "") || "/";
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 // Drop photos into src/assets/hero/ (home.jpg, season.jpg, records.jpg, rivalries.jpg, stats.jpg, default.jpg)
 const heroImages = import.meta.glob<{ default: { src: string } }>("../assets/hero/*.{jpg,jpeg,png,webp}", { eager: true });
@@ -35,7 +42,7 @@ const active = (n: (typeof nav)[number]) =>
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-base={base}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -57,16 +64,28 @@ const active = (n: (typeof nav)[number]) =>
       </div>
     </header>
 
-    <section class:list={["hero", { tall, drawn: !heroSrc }]}>
+    <section class:list={["hero", tall ? "tall" : "slim"]}>
       {heroSrc && <div class="hero-img" style={`background-image:url(${heroSrc})`} />}
       {!heroSrc && (
         <div class="hero-drawn" aria-hidden="true">
           <span class="stripe s1" /><span class="stripe s2" /><span class="stripe s3" />
-          <span class="stripe s4" /><span class="stripe s5" />
+          {tall && <><span class="stripe s4" /><span class="stripe s5" /></>}
         </div>
       )}
       <div class="hero-shade" />
       <div class="hero-content container">
+        {
+          crumbs.length > 0 && (
+            <nav class="crumbs" aria-label="Breadcrumb">
+              {crumbs.map((c, i) => (
+                <>
+                  {i > 0 && <span class="sep" aria-hidden="true">›</span>}
+                  {c.href ? <a href={url(c.href)}>{c.label}</a> : <span aria-current="page">{c.label}</span>}
+                </>
+              ))}
+            </nav>
+          )
+        }
         {heroKicker && <p class="kicker">{heroKicker}</p>}
         <h1>{heroTitle}</h1>
         {heroSub && <p class="sub">{heroSub}</p>}
@@ -87,17 +106,29 @@ const active = (n: (typeof nav)[number]) =>
       </div>
     </footer>
 
+    <!-- Box score panel: game cards with data-box open here instead of leaving the page -->
+    <div class="drawer" id="drawer" aria-hidden="true">
+      <div class="drawer-backdrop" data-close></div>
+      <div class="drawer-panel" role="dialog" aria-modal="true" aria-label="Box score" tabindex="-1">
+        <div class="drawer-grab"></div>
+        <div class="drawer-bar">
+          <button type="button" data-step="prev" aria-label="Previous game">‹ Prev</button>
+          <button type="button" data-step="next" aria-label="Next game">Next ›</button>
+          <span class="spacer"></span>
+          <a class="drawer-full" href="#">Full week ↗</a>
+          <button type="button" class="drawer-close" data-close aria-label="Close box score">✕</button>
+        </div>
+        <div class="drawer-body"></div>
+      </div>
+    </div>
+
     <script is:inline>
       (() => {
         const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const base = document.documentElement.dataset.base || "";
 
-        // Fade sections up as they scroll into view; grids stagger their children.
+        // ---------- fade-in on scroll (things already on screen just appear) ----------
         const targets = document.querySelectorAll("main > *, .grid > *, .stagger > *");
-        targets.forEach((el) => {
-          el.classList.add("reveal");
-          const parent = el.parentElement;
-          if (parent && parent.tagName !== "MAIN") el.style.setProperty("--i", String([...parent.children].indexOf(el) % 12));
-        });
         const io = new IntersectionObserver(
           (entries) => entries.forEach((e) => {
             if (!e.isIntersecting) return;
@@ -107,9 +138,18 @@ const active = (n: (typeof nav)[number]) =>
           }),
           { rootMargin: "0px 0px -6% 0px" },
         );
-        targets.forEach((el) => io.observe(el));
+        targets.forEach((el) => {
+          el.classList.add("reveal");
+          if (el.getBoundingClientRect().top < innerHeight) {
+            el.classList.add("in");
+            el.querySelectorAll("[data-count]").forEach(countUp);
+            return;
+          }
+          const parent = el.parentElement;
+          if (parent && parent.tagName !== "MAIN") el.style.setProperty("--i", String([...parent.children].indexOf(el) % 12));
+          io.observe(el);
+        });
 
-        // Numbers tick up to their value the first time they appear.
         function countUp(el) {
           if (el.dataset.done) return;
           el.dataset.done = "1";
@@ -126,21 +166,173 @@ const active = (n: (typeof nav)[number]) =>
           requestAnimationFrame(step);
         }
 
-        // Transparent header over the hero turns solid once you scroll.
+        // ---------- header, parallax, mobile menu ----------
         const header = document.getElementById("site-header");
         const onScroll = () => header.classList.toggle("scrolled", scrollY > 40);
         addEventListener("scroll", onScroll, { passive: true });
         onScroll();
-
-        // Slow parallax on the hero background.
-        const img = document.querySelector(".hero-img, .hero-drawn");
+        const img = document.querySelector(".hero.tall .hero-img, .hero.tall .hero-drawn");
         if (img && !reduce) addEventListener("scroll", () => { img.style.translate = `0 ${Math.min(scrollY, 600) * 0.3}px`; }, { passive: true });
-
-        const btn = document.getElementById("menu-btn");
-        btn.addEventListener("click", () => {
+        const menuBtn = document.getElementById("menu-btn");
+        menuBtn.addEventListener("click", () => {
           const open = document.body.classList.toggle("menu-open");
-          btn.setAttribute("aria-expanded", String(open));
+          menuBtn.setAttribute("aria-expanded", String(open));
         });
+
+        // ---------- remember which collapsible sections were open, per page ----------
+        const stateKey = "open:" + location.pathname;
+        const readState = () => { try { return JSON.parse(sessionStorage.getItem(stateKey) || "{}"); } catch { return {}; } };
+        const saved = readState();
+        for (const [id, open] of Object.entries(saved)) {
+          const d = document.getElementById(id);
+          if (d && d.tagName === "DETAILS") d.open = open;
+        }
+        document.addEventListener("toggle", (e) => {
+          const d = e.target;
+          if (!(d instanceof HTMLDetailsElement) || !d.id || d.closest(".drawer")) return;
+          const s = readState();
+          s[d.id] = d.open;
+          try { sessionStorage.setItem(stateKey, JSON.stringify(s)); } catch {}
+        }, true);
+
+        // ---------- tabs: [data-tabs] bar + [data-panel] sections, selected via #hash ----------
+        const bar = document.querySelector("[data-tabs]");
+        let activateTab = null;
+        if (bar) {
+          const tabs = [...bar.querySelectorAll("[data-tab]")];
+          const panels = [...document.querySelectorAll("[data-panel]")];
+          const names = tabs.map((t) => t.dataset.tab);
+          activateTab = (name, scroll) => {
+            if (!names.includes(name)) name = names[0];
+            tabs.forEach((t) => {
+              const on = t.dataset.tab === name;
+              t.classList.toggle("active", on);
+              t.setAttribute("aria-selected", String(on));
+            });
+            panels.forEach((p) => { p.hidden = p.dataset.panel !== name; });
+            if (scroll && bar.getBoundingClientRect().top < 70) {
+              scrollTo({ top: scrollY + bar.getBoundingClientRect().top - 64, behavior: reduce ? "auto" : "smooth" });
+            }
+            panels.find((p) => !p.hidden)?.querySelectorAll(".reveal:not(.in)").forEach((el) => el.classList.add("in"));
+            // "← 2024 / 2026 →" links keep you on the same tab
+            document.querySelectorAll("a[data-keep-tab]").forEach((a) => { a.hash = name === names[0] ? "" : name; });
+          };
+          document.body.classList.add("tabs-ready");
+          const go = (name) => {
+            if (bar.querySelector(`[data-tab="${name}"]`)?.classList.contains("active")) return;
+            history.pushState(history.state, "", location.pathname + location.search + "#" + name);
+            activateTab(name, true);
+          };
+          tabs.forEach((t) => t.addEventListener("click", (e) => { e.preventDefault(); go(t.dataset.tab); }));
+          document.querySelectorAll("a[data-tab-link]").forEach((a) => a.addEventListener("click", (e) => {
+            e.preventDefault();
+            go(a.dataset.tabLink);
+            if (!(bar.getBoundingClientRect().top < 70)) bar.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+          }));
+          const fromHash = () => {
+            const h = decodeURIComponent(location.hash.slice(1));
+            // Old links pointed at sections inside the page (#pr-..., #x-..., #power)
+            const el = h && document.getElementById(h);
+            if (el && el.dataset.redirect) { location.replace(el.dataset.redirect); return null; }
+            if (el && el.closest("[data-panel]")) {
+              if (el.tagName === "DETAILS") el.open = true;
+              requestAnimationFrame(() => el.scrollIntoView());
+              return el.closest("[data-panel]").dataset.panel;
+            }
+            return h === "power" ? "rankings" : h;
+          };
+          const initial = fromHash();
+          if (initial !== null) activateTab(initial, false);
+          addEventListener("popstate", () => { const n = fromHash(); if (n !== null) activateTab(n, false); });
+        }
+
+        // ---------- box score panel ----------
+        const drawer = document.getElementById("drawer");
+        const panel = drawer.querySelector(".drawer-panel");
+        const body = drawer.querySelector(".drawer-body");
+        const prevBtn = drawer.querySelector('[data-step="prev"]');
+        const nextBtn = drawer.querySelector('[data-step="next"]');
+        const full = drawer.querySelector(".drawer-full");
+        const cache = new Map();
+        let current = null, pushed = false, returnFocus = null;
+
+        const load = (src) => {
+          if (!cache.has(src)) {
+            cache.set(src, fetch(src)
+              .then((r) => { if (!r.ok) throw new Error(r.status); return r.text(); })
+              .then((html) => new DOMParser().parseFromString(html, "text/html").querySelector(".box-fragment")));
+          }
+          return cache.get(src);
+        };
+        const gameUrl = (game) => {
+          const params = new URLSearchParams(location.search);
+          params.delete("game");
+          const rest = params.toString();
+          const search = [game ? "game=" + game : "", rest].filter(Boolean).join("&");
+          return location.pathname + (search ? "?" + search : "") + location.hash;
+        };
+
+        async function show(src, mode, fallback) {
+          current = src;
+          if (!drawer.classList.contains("open")) {
+            returnFocus = document.activeElement;
+            drawer.classList.add("open");
+            drawer.setAttribute("aria-hidden", "false");
+            document.documentElement.classList.add("drawer-open");
+          }
+          body.innerHTML = '<p class="drawer-loading">Loading…</p>';
+          let frag;
+          try { frag = await load(src); } catch { cache.delete(src); if (fallback) location.href = fallback; return; }
+          if (current !== src || !frag) return;
+          body.replaceChildren(frag.cloneNode(true));
+          body.scrollTop = 0;
+          prevBtn.disabled = !frag.dataset.prev;
+          nextBtn.disabled = !frag.dataset.next;
+          prevBtn.dataset.src = frag.dataset.prev;
+          nextBtn.dataset.src = frag.dataset.next;
+          full.href = frag.dataset.full;
+          if (mode === "push") { history.pushState({ drawer: src }, "", gameUrl(frag.dataset.game)); pushed = true; }
+          else if (mode === "replace") history.replaceState({ drawer: src }, "", gameUrl(frag.dataset.game));
+          panel.focus({ preventScroll: true });
+          [frag.dataset.prev, frag.dataset.next].forEach((s) => s && load(s)); // warm neighbours
+        }
+
+        function hide() {
+          current = null;
+          drawer.classList.remove("open");
+          drawer.setAttribute("aria-hidden", "true");
+          document.documentElement.classList.remove("drawer-open");
+          if (returnFocus && returnFocus.focus) returnFocus.focus({ preventScroll: true });
+        }
+
+        function close() {
+          if (!drawer.classList.contains("open")) return;
+          if (pushed && history.state && history.state.drawer) { pushed = false; history.back(); } // popstate hides it
+          else { history.replaceState(null, "", gameUrl(null)); hide(); }
+        }
+
+        document.addEventListener("click", (e) => {
+          const a = e.target.closest("a[data-box]");
+          if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          e.preventDefault();
+          show(a.dataset.box, drawer.classList.contains("open") ? "replace" : "push", a.href);
+        });
+        drawer.querySelectorAll("[data-close]").forEach((el) => el.addEventListener("click", close));
+        [prevBtn, nextBtn].forEach((b) => b.addEventListener("click", () => b.dataset.src && show(b.dataset.src, "replace")));
+        document.addEventListener("keydown", (e) => {
+          if (!drawer.classList.contains("open")) return;
+          if (e.key === "Escape") close();
+          else if (e.key === "ArrowLeft" && !prevBtn.disabled) prevBtn.click();
+          else if (e.key === "ArrowRight" && !nextBtn.disabled) nextBtn.click();
+        });
+        addEventListener("popstate", (e) => {
+          if (e.state && e.state.drawer) show(e.state.drawer, null);
+          else if (drawer.classList.contains("open")) hide();
+        });
+
+        // A shared link like ?game=2025-17-1-3 opens the panel on arrival.
+        const game = (new URLSearchParams(location.search).get("game") || "").match(/^(\d{4})-([\w-]+)$/);
+        if (game) show(`${base}/box/${game[1]}/${game[2]}/`, "replace");
       })();
     </script>
   </body>
@@ -153,6 +345,7 @@ const active = (n: (typeof nav)[number]) =>
     z-index: 20;
     transition: background 0.3s, box-shadow 0.3s, padding 0.3s;
     padding: 14px 0;
+    view-transition-name: site-header;
   }
   .site-header.scrolled {
     background: rgb(22 24 28 / 0.94);
@@ -197,7 +390,7 @@ const active = (n: (typeof nav)[number]) =>
   nav#site-nav a.active { border-color: #fff; }
   .menu-btn { display: none; }
 
-  @media (max-width: 760px) {
+  @media (max-width: 860px) {
     .bar { padding: 0 16px; }
     .wordmark { font-size: 1.15rem; }
     .menu-btn {
@@ -220,24 +413,27 @@ const active = (n: (typeof nav)[number]) =>
   .hero {
     position: relative;
     overflow: hidden;
-    min-height: 340px;
-    height: 52vh;
-    max-height: 480px;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     color: #fff;
     background: #2b2e33;
-    text-align: center;
   }
-  .hero.tall { height: 80vh; min-height: 460px; max-height: 760px; }
+  /* Inner pages: a slim band so content starts right away */
+  .hero.slim { min-height: 200px; padding: 92px 0 26px; text-align: left; }
+  .hero.slim h1 { font-size: clamp(1.7rem, 4.2vw, 2.6rem); margin: 0; }
+  .hero.slim .sub { margin: 6px 0 0; font-weight: 600; font-size: 0.95rem; max-width: 70ch; }
+  .hero.slim .kicker { margin-bottom: 4px; }
+  .hero.slim .hero-content { padding-top: 0; animation: none; }
+  /* Home: the big animated banner */
+  .hero.tall { height: 80vh; min-height: 460px; max-height: 760px; align-items: center; text-align: center; }
   .hero-img, .hero-drawn {
     position: absolute;
     inset: -40px 0 -40px 0;
     background-size: cover;
     background-position: center 30%;
-    animation: kenburns 14s ease-out both;
     will-change: translate;
   }
+  .tall .hero-img, .tall .hero-drawn { animation: kenburns 14s ease-out both; }
   @keyframes kenburns { from { transform: scale(1.12); } to { transform: scale(1); } }
   .hero-shade {
     position: absolute;
@@ -250,21 +446,33 @@ const active = (n: (typeof nav)[number]) =>
       repeating-linear-gradient(115deg, transparent 0 46px, rgb(255 255 255 / 0.05) 46px 48px),
       radial-gradient(ellipse at 70% 30%, #6d737b 0%, #3a3e44 55%, #24272b 100%);
   }
-  .stripe { position: absolute; height: 54px; width: 70%; transform: skewX(-35deg); opacity: 0.85; animation: slide 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .stripe { position: absolute; height: 54px; width: 70%; transform: skewX(-35deg); opacity: 0.85; }
+  .tall .stripe { animation: slide 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .slim .stripe { height: 16px; opacity: 0.7; }
   .s1 { background: #c8443a; bottom: 24%; left: -12%; animation-delay: 0.1s; }
   .s2 { background: #8fa35a; bottom: 10%; left: -20%; width: 55%; animation-delay: 0.25s; }
   .s3 { background: #d7b24b; bottom: -2%; left: -8%; width: 45%; animation-delay: 0.4s; }
+  .slim .s1 { bottom: auto; top: 30%; left: auto; right: -30%; width: 45%; }
+  .slim .s2 { bottom: auto; top: 46%; left: auto; right: -36%; width: 38%; }
+  .slim .s3 { bottom: auto; top: 60%; left: auto; right: -40%; width: 30%; }
   .s4 { background: #c8443a; top: 18%; right: -30%; width: 40%; height: 18px; animation-delay: 0.55s; }
   .s5 { background: #d7b24b; top: 26%; right: -34%; width: 34%; height: 10px; animation-delay: 0.7s; }
   @keyframes slide { from { translate: -40% 0; opacity: 0; } }
 
-  .hero-content { position: relative; z-index: 1; padding-top: 70px; animation: rise 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s both; }
+  .hero-content { position: relative; z-index: 1; padding-top: 70px; width: 100%; }
+  .tall .hero-content { animation: rise 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s both; }
   @keyframes rise { from { opacity: 0; transform: translateY(24px); } }
   .hero h1 { color: #fff; text-shadow: 0 2px 18px rgb(0 0 0 / 0.45); margin-bottom: 0.3em; }
   .kicker { text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.75rem; font-weight: 700; color: var(--accent); margin: 0 0 10px; }
   .sub { font-weight: 700; font-size: clamp(0.9rem, 1.8vw, 1.05rem); max-width: 60ch; margin: 0 auto; text-shadow: 0 1px 10px rgb(0 0 0 / 0.5); }
 
-  main { padding-top: 48px; padding-bottom: 72px; min-height: 40vh; }
+  .crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 600; margin-bottom: 8px; }
+  .crumbs a { color: rgb(255 255 255 / 0.78); }
+  .crumbs a:hover { color: #fff; }
+  .crumbs .sep { color: rgb(255 255 255 / 0.45); }
+  .crumbs [aria-current] { color: var(--accent); }
+
+  main { padding-top: 32px; padding-bottom: 72px; min-height: 40vh; }
   .site-footer { border-top: 1px solid var(--border); padding: 28px 0 36px; background: var(--surface-2); }
   .years { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-bottom: 8px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; }
 </style>

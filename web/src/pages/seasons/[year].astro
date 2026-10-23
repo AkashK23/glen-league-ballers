@@ -2,9 +2,21 @@
 import Base from "../../layouts/Base.astro";
 import StandingsTable from "../../components/StandingsTable.astro";
 import Matchup from "../../components/Matchup.astro";
-import WrittenRanking from "../../components/WrittenRanking.astro";
 import Trophy from "../../components/Trophy.astro";
-import { type SeasonData, bodyHtml, playoffRoundName, pts, seasonExtras, seasonNotes, seasons, slug, url, weekUrl, writtenRankings } from "../../lib/data";
+import {
+  type SeasonData,
+  bodyHtml,
+  playoffRoundName,
+  pts,
+  seasonArticles,
+  seasonExtras,
+  seasonNotes,
+  seasons,
+  slug,
+  url,
+  weekUrl,
+  writtenRankings,
+} from "../../lib/data";
 
 export function getStaticPaths() {
   return seasons.map((s) => ({ params: { year: String(s.year) }, props: { season: s } }));
@@ -13,8 +25,12 @@ export function getStaticPaths() {
 const { season: s } = Astro.props as { season: SeasonData };
 const notes = seasonNotes(s.year);
 const recapHtml = notes ? await bodyHtml(notes) : "";
+const articleIds = new Set(seasonArticles.filter((a) => a.year === s.year).map((a) => a.id));
 const extraSections = await Promise.all(
-  seasonExtras(s.year).map(async ([section, items]) => [section, await Promise.all(items.map(async (x) => ({ ...x, html: await bodyHtml(x.mod) })))] as const),
+  seasonExtras(s.year).map(
+    async ([section, items]) =>
+      [section, await Promise.all(items.map(async (x) => ({ ...x, isArticle: articleIds.has(x.id), html: articleIds.has(x.id) ? "" : await bodyHtml(x.mod) })))] as const,
+  ),
 );
 const written = writtenRankings(s.year); // oldest first, like the original archive
 const prev = seasons.find((x) => x.year === s.year - 1);
@@ -33,6 +49,7 @@ const regularWeeks = byWeek("regular").filter(([, ms]) => ms.some((m) => m.compl
 const playoffWeeks = byWeek("playoff");
 const consolationWeeks = byWeek("consolation");
 const latestWeek = regularWeeks.at(-1)?.[0];
+const latestGames = regularWeeks.at(-1)?.[1] ?? [];
 
 const scores = s.matchups
   .filter((m) => m.completed && m.kind !== "consolation" && m.weeks === 1)
@@ -41,9 +58,17 @@ const scores = s.matchups
 const high = scores.reduce((a, b) => (b.score > a.score ? b : a), scores[0]);
 const low = scores.reduce((a, b) => (b.score < a.score ? b : a), scores[0]);
 const pfLeader = s.standings.reduce((a, b) => (b.points_for > a.points_for ? b : a), s.standings[0]);
-
 const hasBids = s.draft.some((p) => p.bid_amount);
-const draftRounds = [...new Set(s.draft.map((p) => p.round))];
+
+const tabs = [
+  { id: "overview", label: "Overview" },
+  { id: "standings", label: playoffWeeks.length ? "Standings & Playoffs" : "Standings" },
+  { id: "results", label: "Weekly Results" },
+  ...(written.length ? [{ id: "rankings", label: "Power Rankings" }] : []),
+  ...(extraSections.length ? [{ id: "notes", label: "Notes & Media" }] : []),
+  ...(s.draft.length ? [{ id: "draft", label: "Draft" }] : []),
+];
+const sectionId = (name: string) => `s-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 ---
 
 <Base
@@ -52,175 +77,207 @@ const draftRounds = [...new Set(s.draft.map((p) => p.round))];
   heroKicker={`Season ${seasonNumber}`}
   heroSub={s.complete ? `${s.champion} claimed the title over ${s.runner_up}` : `In progress · through week ${latestWeek}`}
   hero="season"
+  crumbs={[{ href: "/seasons", label: "Seasons" }, { label: String(s.year) }]}
 >
   <div class="season-nav small">
-    {prev ? <a href={url(`/seasons/${prev.year}`)}>← {prev.year}</a> : <span />}
-    <a href={url("/seasons")}>All seasons</a>
-    {next ? <a href={url(`/seasons/${next.year}`)}>{next.year} →</a> : <span />}
+    {prev ? <a href={url(`/seasons/${prev.year}`)} data-keep-tab>← {prev.year}</a> : <span />}
+    {next ? <a href={url(`/seasons/${next.year}`)} data-keep-tab>{next.year} →</a> : <span />}
   </div>
 
-  {
-    s.complete && (
-      <section class="banner card">
-        <a class="champ" href={url(`/owners/${slug(s.champion!)}`)}>
-          <Trophy size={96} />
-          <div>
-            <span class="pill gold">Champion</span>
-            <div class="big">{s.champion}</div>
-            <div class="muted small">{s.standings[0].team_name}</div>
+  <nav class="tabs" data-tabs role="tablist" aria-label={`${s.year} season sections`}>
+    {tabs.map((t) => <a href={`#${t.id}`} data-tab={t.id} role="tab">{t.label}</a>)}
+  </nav>
+
+  <!-- ===== Overview ===== -->
+  <section data-panel="overview" role="tabpanel">
+    {
+      s.complete ? (
+        <div class="banner card">
+          <a class="champ" href={url(`/owners/${slug(s.champion!)}`)}>
+            <Trophy size={96} />
+            <div>
+              <span class="pill gold">Champion</span>
+              <div class="big">{s.champion}</div>
+              <div class="muted small">{s.standings[0].team_name}</div>
+            </div>
+          </a>
+          <div class="facts">
+            <div><span class="muted small">Runner-up</span><br />{s.runner_up}</div>
+            <div><span class="muted small">Last place</span><br />{s.last_place}</div>
+            <div><span class="muted small">Points leader</span><br />{pfLeader.owner} ({pts(pfLeader.points_for)})</div>
+            {high && <div><span class="muted small">High score</span><br />{high.owner} {pts(high.score)} <span class="muted small">(Wk {high.week})</span></div>}
+            {low && <div><span class="muted small">Low score</span><br />{low.owner} {pts(low.score)} <span class="muted small">(Wk {low.week})</span></div>}
           </div>
-        </a>
-        <div class="facts">
-          <div><span class="muted small">Runner-up</span><br />{s.runner_up}</div>
-          <div><span class="muted small">Last place</span><br />{s.last_place}</div>
-          <div><span class="muted small">Points leader</span><br />{pfLeader.owner} ({pts(pfLeader.points_for)})</div>
-          {high && <div><span class="muted small">High score</span><br />{high.owner} {pts(high.score)} <span class="muted small">(Wk {high.week})</span></div>}
-          {low && <div><span class="muted small">Low score</span><br />{low.owner} {pts(low.score)} <span class="muted small">(Wk {low.week})</span></div>}
         </div>
-      </section>
-    )
-  }
-
-  {
-    notes && (
-      <section class="prose notes">
-        <div set:html={recapHtml} />
-        {notes.frontmatter.player_of_the_year && (
-          <p class="center">Player of the Year: <strong class="poy">{notes.frontmatter.player_of_the_year}</strong></p>
-        )}
-      </section>
-    )
-  }
-
-  <h2 class="section-title">{s.complete ? "Final Standings" : "Standings"}</h2>
-  <div class="card">
-    <StandingsTable rows={s.standings} final={s.complete} playoffTeams={s.playoff_team_count} />
-  </div>
-
-  {
-    written.length > 0 && (
-      <section id="power">
-        <h2 class="section-title">Power Rankings</h2>
-        {written.map((w, i) => (
-          <details class="accordion" id={`pr-${w.id}`} open={!s.complete && i === written.length - 1}>
-            <summary>{w.title}</summary>
-            <div class="body"><WrittenRanking ranking={w} season={s} /></div>
-          </details>
-        ))}
-      </section>
-    )
-  }
-
-  {
-    playoffWeeks.length > 0 && (
-      <section>
-        <h2 class="section-title">Playoffs</h2>
-        <div class="bracket">
-          {playoffWeeks.map(([week, ms]) => (
-            <div class="round">
-              <h3>{playoffRoundName(s, week)}</h3>
-              {ms.filter((m) => m.away).map((m) => <Matchup m={m} year={s.year} label={`Week ${week}`} />)}
-              {ms.filter((m) => !m.away).map((m) => <div class="muted small">Bye: {m.home.owner}</div>)}
-            </div>
-          ))}
+      ) : (
+        <div class="grid grid-2">
+          <div class="card">
+            <h3>Standings · through week {latestWeek}</h3>
+            <StandingsTable rows={s.standings} limit={6} compact playoffTeams={s.playoff_team_count} />
+            <a class="small" href="#standings" data-tab-link="standings">Full standings →</a>
+          </div>
+          <div class="card">
+            <h3>Week {latestWeek} results</h3>
+            <div class="games tight">{latestGames.map((m) => <Matchup m={m} year={s.year} />)}</div>
+          </div>
         </div>
-        {consolationWeeks.length > 0 && (
-          <details class="accordion consolation">
-            <summary>Consolation bracket</summary>
-            <div class="body bracket">
-              {consolationWeeks.map(([week, ms]) => (
-                <div class="round">
-                  <h3>Week {week}</h3>
-                  {ms.filter((m) => m.away).map((m) => <Matchup m={m} year={s.year} />)}
-                </div>
-              ))}
-            </div>
-          </details>
-        )}
-      </section>
-    )
-  }
+      )
+    }
 
-  {
-    extraSections.map(([section, items]) => (
-      <section id={`s-${section.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
-        <h2 class="section-title">{section}</h2>
-        {items.length === 1 && items[0].title === section ? (
-          <div class="archive-wrap solo" id={`x-${items[0].id}`} set:html={items[0].html} />
-        ) : (
-          items.map((x) => (
-            <details class="accordion" id={`x-${x.id}`}>
-              <summary>{x.title}</summary>
-              <div class="body archive-wrap" set:html={x.html} />
+    {
+      notes && (recapHtml.trim() || notes.frontmatter.player_of_the_year) && (
+        <div class="prose recap">
+          <div set:html={recapHtml} />
+          {notes.frontmatter.player_of_the_year && (
+            <p>Player of the Year: <strong class="poy">{notes.frontmatter.player_of_the_year}</strong></p>
+          )}
+        </div>
+      )
+    }
+
+    <div class="jump">
+      {tabs.slice(1).map((t) => <a class="jump-card" href={`#${t.id}`} data-tab-link={t.id}>{t.label} →</a>)}
+    </div>
+  </section>
+
+  <!-- ===== Standings & Playoffs ===== -->
+  <section data-panel="standings" role="tabpanel">
+    <h2 class="section-title">{s.complete ? "Final Standings" : "Standings"}</h2>
+    <div class="card">
+      <StandingsTable rows={s.standings} final={s.complete} playoffTeams={s.playoff_team_count} />
+    </div>
+    {
+      playoffWeeks.length > 0 && (
+        <>
+          <h2 class="section-title">Playoffs</h2>
+          <div class="bracket">
+            {playoffWeeks.map(([week, ms]) => (
+              <div class="round">
+                <h3>{playoffRoundName(s, week)}</h3>
+                {ms.filter((m) => m.away).map((m) => <Matchup m={m} year={s.year} label={`Week ${week}`} />)}
+                {ms.filter((m) => !m.away).map((m) => <div class="muted small">Bye: {m.home.owner}</div>)}
+              </div>
+            ))}
+          </div>
+          {consolationWeeks.length > 0 && (
+            <details class="accordion consolation" id="consolation">
+              <summary>Consolation bracket</summary>
+              <div class="body bracket">
+                {consolationWeeks.map(([week, ms]) => (
+                  <div class="round">
+                    <h3>Week {week}</h3>
+                    {ms.filter((m) => m.away).map((m) => <Matchup m={m} year={s.year} />)}
+                  </div>
+                ))}
+              </div>
             </details>
-          ))
-        )}
-      </section>
-    ))
-  }
+          )}
+        </>
+      )
+    }
+  </section>
 
-  <section>
+  <!-- ===== Weekly Results ===== -->
+  <section data-panel="results" role="tabpanel">
     <h2 class="section-title">Weekly Results</h2>
-    {s.has_box_scores && <p class="center muted small">Click any game for the full box score.</p>}
+    <p class="center muted small">Tap any game for the box score.</p>
     {
       regularWeeks
         .slice()
         .reverse()
         .map(([week, ms], i) => (
-          <details class="accordion" open={i === 0}>
+          <details class="accordion" id={`wk-${week}`} open={i === 0}>
             <summary>Week {week}</summary>
             <div class="body">
-              <div class="games">
-                {ms.map((m) => <Matchup m={m} year={s.year} />)}
-              </div>
-              <a class="small" href={weekUrl(s.year, week)}>All week {week} box scores →</a>
+              <div class="games">{ms.map((m) => <Matchup m={m} year={s.year} />)}</div>
+              <a class="small" href={weekUrl(s.year, week)}>All week {week} box scores on one page ↗</a>
             </div>
           </details>
         ))
     }
   </section>
 
+  <!-- ===== Power Rankings ===== -->
+  {
+    written.length > 0 && (
+      <section data-panel="rankings" role="tabpanel">
+        <h2 class="section-title">Power Rankings</h2>
+        <div class="list">
+          {written.map((w) => (
+            <a class="row" href={url(`/seasons/${s.year}/power-rankings/${w.id}/`)} id={`pr-${w.id}`} data-redirect={url(`/seasons/${s.year}/power-rankings/${w.id}/`)}>
+              <span class="t">{w.title}</span>
+              {(w.author || w.entries.length > 0) && <span class="muted small">{w.author ?? `${w.entries.length} teams`}</span>}
+              <span class="go">→</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ===== Notes & Media ===== -->
+  {
+    extraSections.length > 0 && (
+      <section data-panel="notes" role="tabpanel">
+        {extraSections.map(([section, items]) => (
+          <div id={sectionId(section)}>
+            <h2 class="section-title">{section}</h2>
+            {items.filter((x) => x.isArticle).length > 0 && (
+              <div class="list">
+                {items.filter((x) => x.isArticle).map((x) => (
+                  <a class="row" href={url(`/seasons/${s.year}/articles/${x.id}/`)} id={`x-${x.id}`} data-redirect={url(`/seasons/${s.year}/articles/${x.id}/`)}>
+                    <span class="t">{x.title.replace(/^article:\s*/i, "")}</span>
+                    <span class="go">→</span>
+                  </a>
+                ))}
+              </div>
+            )}
+            {items.filter((x) => !x.isArticle).length === 1 && items[0].title === section ? (
+              <div class="archive-wrap solo" id={`x-${items[0].id}`} set:html={items[0].html} />
+            ) : (
+              items.filter((x) => !x.isArticle).map((x) => (
+                <details class="accordion" id={`x-${x.id}`}>
+                  <summary>{x.title}</summary>
+                  <div class="body archive-wrap" set:html={x.html} />
+                </details>
+              ))
+            )}
+          </div>
+        ))}
+      </section>
+    )
+  }
+
+  <!-- ===== Draft ===== -->
   {
     s.draft.length > 0 && (
-      <section>
+      <section data-panel="draft" role="tabpanel">
         <h2 class="section-title">Draft</h2>
-        <details class="accordion">
-          <summary>{draftRounds.length} rounds · {s.draft.length} picks</summary>
-          <div class="body table-wrap">
-            <table>
-              <thead>
-                <tr><th class="num">Rd</th><th class="num">Pick</th><th>Owner</th><th>Player</th>{hasBids && <th class="num">Bid</th>}</tr>
-              </thead>
-              <tbody>
-                {s.draft.map((p) => (
-                  <tr>
-                    <td class="num">{p.round}</td>
-                    <td class="num">{p.pick}</td>
-                    <td>{p.owner}</td>
-                    <td>{p.player}{p.keeper && <span class="pill">Keeper</span>}</td>
-                    {hasBids && <td class="num">{p.bid_amount ? `$${p.bid_amount}` : ""}</td>}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </details>
+        <div class="card table-wrap">
+          <table>
+            <thead>
+              <tr><th class="num">Rd</th><th class="num">Pick</th><th>Owner</th><th>Player</th>{hasBids && <th class="num">Bid</th>}</tr>
+            </thead>
+            <tbody>
+              {s.draft.map((p) => (
+                <tr class:list={{ "round-start": p.pick === 1 }}>
+                  <td class="num">{p.round}</td>
+                  <td class="num">{p.pick}</td>
+                  <td>{p.owner}</td>
+                  <td>{p.player}{p.keeper && <span class="pill">Keeper</span>}</td>
+                  {hasBids && <td class="num">{p.bid_amount ? `$${p.bid_amount}` : ""}</td>}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
     )
   }
 </Base>
 
-<script is:inline>
-  // Links like /seasons/2026#pr-week-6 or #x-<article> open that section.
-  const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
-  if (target && target.tagName === "DETAILS") {
-    target.open = true;
-    requestAnimationFrame(() => target.scrollIntoView());
-  }
-</script>
-
 <style>
-  .season-nav { display: flex; justify-content: space-between; margin-bottom: 24px; font-weight: 600; }
+  .season-nav { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 600; }
   .banner { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: center; background: linear-gradient(160deg, var(--gold-soft), var(--surface) 60%); }
   .champ { display: flex; align-items: center; gap: 14px; color: var(--text); }
   .champ:hover { text-decoration: none; }
@@ -228,8 +285,14 @@ const draftRounds = [...new Set(s.draft.map((p) => p.round))];
   .champ:hover :global(svg) { transform: rotate(-8deg) scale(1.05); }
   .big { font-size: 2rem; font-weight: 800; text-transform: uppercase; color: var(--heading); line-height: 1.1; }
   .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px 24px; flex: 1; min-width: min(100%, 320px); }
-  .notes { margin: 28px auto 0; text-align: left; }
+  .recap { margin: 28px auto 0; }
   .poy { color: var(--brand); }
+  .jump { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  .jump-card {
+    border: 1px solid var(--border); border-radius: 999px; padding: 8px 16px;
+    font-size: 0.8rem; font-weight: 600; color: var(--text); transition: border-color 0.15s, color 0.15s;
+  }
+  .jump-card:hover { border-color: var(--accent); color: var(--heading); text-decoration: none; }
   .bracket { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); align-items: start; }
   .round { display: flex; flex-direction: column; gap: 8px; }
   .round h3 { margin: 0; }
@@ -237,4 +300,11 @@ const draftRounds = [...new Set(s.draft.map((p) => p.round))];
   .archive-wrap { max-width: 82ch; }
   .archive-wrap.solo { margin: 0 auto; }
   .games { display: grid; gap: 10px; margin: 6px 0 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); }
+  .games.tight { grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr)); }
+  .list { max-width: 720px; margin: 0 auto 18px; }
+  .row { display: flex; gap: 16px; align-items: baseline; padding: 13px 8px; border-bottom: 1px solid var(--border); color: var(--text); transition: background 0.15s, padding 0.15s; }
+  .row:hover { text-decoration: none; background: var(--surface-2); padding-left: 14px; }
+  .row .t { flex: 1; font-weight: 600; color: var(--heading); }
+  .row .go { color: var(--muted); }
+  tr.round-start td { border-top: 2px solid var(--border); }
 </style>

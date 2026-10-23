@@ -1,0 +1,28 @@
+---
+import Base from "../../../../layouts/Base.astro";
+import { type ExtraItem, bodyHtml, seasonArticles, url } from "../../../../lib/data";
+
+export function getStaticPaths() {
+  return seasonArticles.map((a) => ({ params: { year: String(a.year), id: a.id }, props: { article: a } }));
+}
+
+const { article: a } = Astro.props as { article: ExtraItem };
+const title = a.title.replace(/^article:\s*/i, "");
+const html = await bodyHtml(a.mod);
+---
+
+<Base
+  title={`${title} (${a.year})`}
+  heroTitle={title}
+  heroKicker={`${a.year} · ${a.section}`}
+  hero="records"
+  crumbs={[{ href: "/seasons", label: "Seasons" }, { href: `/seasons/${a.year}`, label: String(a.year) }, { href: `/seasons/${a.year}#notes`, label: "Notes & Media" }, { label: title }]}
+>
+  <p class="small back"><a href={url(`/seasons/${a.year}#notes`)}>← {a.year} notes & media</a> · <a href={url("/articles")}>All articles</a></p>
+  <article class="article archive-html-wrap" set:html={html} />
+</Base>
+
+<style>
+  .back { font-weight: 600; margin-bottom: 20px; }
+  .article { max-width: 78ch; margin: 0 auto; }
+</style>

@@ -177,6 +177,45 @@ details > summary { cursor: pointer; color: var(--brand); font-size: 0.85rem; ma
 .video { position: relative; width: min(100%, 640px); aspect-ratio: 16 / 9; margin: 14px auto; }
 .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 4px; }
 
+/* ---------- tabs (season pages) ---------- */
+.tabs { display: none; }
+.tabs-ready .tabs {
+  display: flex;
+  gap: 2px;
+  position: sticky;
+  top: 64px;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  margin: 0 -16px 26px;
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tabs { scroll-margin-top: 64px; }
+.tabs a {
+  flex: none;
+  padding: 14px 14px 12px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 3px solid transparent;
+  transition: color 0.15s, border-color 0.2s;
+}
+.tabs a:hover { color: var(--heading); text-decoration: none; }
+.tabs a.active { color: var(--heading); border-bottom-color: var(--accent); }
+[data-panel][hidden] { display: none; }
+.tabs-ready [data-panel] > .section-title:first-child { border-top: none; margin-top: 0; padding-top: 0; }
+.tabs-ready [data-panel]:not([hidden]) { animation: drop 0.25s ease; }
+
+/* ---------- page-to-page transitions (browsers that support them) ---------- */
+@view-transition { navigation: auto; }
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: 0.22s; }
+
 /* ---------- scroll reveal (only when JS is on, see Base.astro) ---------- */
 .js .reveal {
   opacity: 0;
@@ -189,5 +228,6 @@ details > summary { cursor: pointer; color: var(--brand); font-size: 0.85rem; ma
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .js .reveal { opacity: 1; transform: none; transition: none; }
+  @view-transition { navigation: none; }
   *, *::before, *::after { animation: none !important; }
 }

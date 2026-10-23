@@ -28,7 +28,7 @@ const bests = [
 ];
 ---
 
-<Base title={owner} heroTitle={owner} heroKicker="Owner profile" heroSub={playoff?.championships ? `${playoff.championships}× ${league.short_name} champion` : `${career?.seasons ?? 0} seasons in the league`} hero="owner">
+<Base title={owner} heroTitle={owner} heroKicker="Owner profile" crumbs={[{ href: "/owners", label: "Owners" }, { label: owner }]} heroSub={playoff?.championships ? `${playoff.championships}× ${league.short_name} champion` : `${career?.seasons ?? 0} seasons in the league`} hero="owner">
   {
     playoff?.championships > 0 && (
       <div class="cups">{Array.from({ length: playoff.championships }, () => <Trophy size={70} />)}</div>
