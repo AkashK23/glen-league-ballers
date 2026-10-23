@@ -5,6 +5,10 @@ provider = "espn"          # swap to "sleeper", "yahoo", ... once a provider exi
 league_id = 307073         # from your ESPN league URL: ...?leagueId=XXXXXX
 first_year = 2014
 
+[site]
+name = "Glen League Ballers"
+tagline = "May God help us all"
+
 # Canonical owners. Stats are keyed by person, not team name. `ids` lists every
 # platform account id that belongs to this person (ESPN member ids look like
 # "{ABCD-...}"; run `sync` once and look in data/seasons/*.json to find them).

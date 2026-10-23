@@ -1,0 +1,123 @@
+---
+import Base from "../layouts/Base.astro";
+import { completedSeasons, pct, pts, record, records, slug, url } from "../lib/data";
+
+const playoffByOwner = Object.fromEntries((records.playoffs.most_championships as any[]).map((r) => [r.owner, r]));
+const career = (records.all_time.career as any[]).map((r) => {
+  const p = playoffByOwner[r.owner] ?? { championships: 0, appearances: 0, wins: 0, losses: 0 };
+  const games = r.wins + r.losses + r.ties;
+  return { ...r, ...{ titles: p.championships, playoff_apps: p.appearances, playoff_record: record(p.wins, p.losses) }, ppg: games ? r.points_for / games : 0 };
+});
+
+const years = completedSeasons.map((s) => s.year).sort((a, b) => a - b);
+const finishes: Record<string, Record<number, { rank: number; teams: number }>> = {};
+for (const s of completedSeasons) {
+  for (const t of s.standings) {
+    (finishes[t.owner] ??= {})[s.year] = { rank: t.final_rank ?? 0, teams: s.standings.length };
+  }
+}
+const finishOwners = career.map((c) => c.owner);
+
+const cols = [
+  { key: "owner", label: "Owner" },
+  { key: "seasons", label: "Yrs", num: true },
+  { key: "win_pct", label: "Record", num: true },
+  { key: "win_pct", label: "Win %", num: true },
+  { key: "ppg", label: "PPG", num: true },
+  { key: "points_for", label: "PF", num: true },
+  { key: "points_against", label: "PA", num: true },
+  { key: "titles", label: "Titles", num: true },
+  { key: "playoff_apps", label: "Playoffs", num: true },
+  { key: "scoring_titles", label: "Scoring titles", num: true },
+  { key: "schedule_difficulty_titles", label: "Most PA titles", num: true },
+  { key: "winning_seasons", label: "Winning yrs", num: true },
+];
+---
+
+<Base title="Statistics">
+  <h1>Statistics</h1>
+  <p class="muted">Career totals across completed seasons. Click a column to sort.</p>
+
+  <h2>All-time standings</h2>
+  <div class="card table-wrap">
+    <table id="career">
+      <thead>
+        <tr>{cols.map((c) => <th class:list={{ num: c.num }} data-key={c.key} data-num={c.num ? "1" : ""}>{c.label}</th>)}</tr>
+      </thead>
+      <tbody>
+        {
+          career.map((r) => (
+            <tr>
+              <td data-v={r.owner}><a href={url(`/owners/${slug(r.owner)}`)}>{r.owner}</a></td>
+              <td class="num" data-v={r.seasons}>{r.seasons}</td>
+              <td class="num" data-v={r.win_pct}>{record(r.wins, r.losses, r.ties)}</td>
+              <td class="num" data-v={r.win_pct}>{pct(r.win_pct)}</td>
+              <td class="num" data-v={r.ppg}>{r.ppg.toFixed(1)}</td>
+              <td class="num" data-v={r.points_for}>{pts(r.points_for)}</td>
+              <td class="num" data-v={r.points_against}>{pts(r.points_against)}</td>
+              <td class="num" data-v={r.titles}>{r.titles ? "🏆".repeat(r.titles) : "—"}</td>
+              <td class="num" data-v={r.playoff_apps}>{r.playoff_apps}</td>
+              <td class="num" data-v={r.scoring_titles}>{r.scoring_titles}</td>
+              <td class="num" data-v={r.schedule_difficulty_titles}>{r.schedule_difficulty_titles}</td>
+              <td class="num" data-v={r.winning_seasons}>{r.winning_seasons}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Final finish by season</h2>
+  <p class="muted small">Gold = champion, red = last place.</p>
+  <div class="card table-wrap">
+    <table class="finishes">
+      <thead>
+        <tr><th>Owner</th>{years.map((y) => <th class="num"><a href={url(`/seasons/${y}`)}>{y}</a></th>)}</tr>
+      </thead>
+      <tbody>
+        {
+          finishOwners.map((o) => (
+            <tr>
+              <td><a href={url(`/owners/${slug(o)}`)}>{o}</a></td>
+              {years.map((y) => {
+                const f = finishes[o]?.[y];
+                if (!f) return <td class="num muted">·</td>;
+                return <td class:list={["num", { gold: f.rank === 1, last: f.rank === f.teams }]}>{f.rank}</td>;
+              })}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</Base>
+
+<script>
+  const table = document.getElementById("career") as HTMLTableElement | null;
+  if (table) {
+    let sortCol = -1;
+    let asc = false;
+    table.querySelectorAll("th").forEach((th, i) => {
+      th.style.cursor = "pointer";
+      th.addEventListener("click", () => {
+        asc = sortCol === i ? !asc : !th.dataset.num; // numbers default high-to-low
+        sortCol = i;
+        const rows = Array.from(table.tBodies[0].rows);
+        rows.sort((a, b) => {
+          const x = a.cells[i].dataset.v ?? "";
+          const y = b.cells[i].dataset.v ?? "";
+          const cmp = th.dataset.num ? Number(x) - Number(y) : x.localeCompare(y);
+          return asc ? cmp : -cmp;
+        });
+        rows.forEach((r) => table.tBodies[0].appendChild(r));
+      });
+    });
+  }
+</script>
+
+<style>
+  .finishes td, .finishes th { text-align: center; padding: 6px 8px; }
+  .finishes td:first-child, .finishes th:first-child { text-align: left; }
+  .gold { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+  .last { background: color-mix(in srgb, var(--loss) 18%, transparent); color: var(--loss); font-weight: 600; }
+</style>

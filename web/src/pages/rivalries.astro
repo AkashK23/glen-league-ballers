@@ -1,0 +1,149 @@
+---
+import Base from "../layouts/Base.astro";
+import { h2h, league, pts, record, rivalries, slug, url, versus } from "../lib/data";
+
+const active = rivalries.filter((r) => r.frozen_after == null);
+const historic = rivalries.filter((r) => r.frozen_after != null);
+
+// Owners with the most games first, so long-time members sit top-left in the grid.
+const games: Record<string, number> = {};
+for (const r of h2h) {
+  const n = r.wins_a + r.wins_b + r.ties;
+  games[r.owner_a] = (games[r.owner_a] ?? 0) + n;
+  games[r.owner_b] = (games[r.owner_b] ?? 0) + n;
+}
+const owners = league.owners.slice().sort((a, b) => (games[b] ?? 0) - (games[a] ?? 0));
+
+function cellStyle(w: number, l: number) {
+  if (w + l === 0) return "";
+  const p = w / (w + l);
+  const color = p >= 0.5 ? "var(--win)" : "var(--loss)";
+  const strength = Math.round(Math.abs(p - 0.5) * 2 * 45) + 8;
+  return `background: color-mix(in srgb, ${color} ${strength}%, transparent)`;
+}
+
+const lead = (a: number, b: number) => (a > b ? "lead" : a < b ? "trail" : "");
+---
+
+<Base title="Rivalries">
+  <h1>Rivalries</h1>
+  <p class="muted">Head-to-head in the regular season and championship bracket.</p>
+
+  {
+    [
+      { title: "Active rivalries", list: active },
+      { title: "Historic rivalries", list: historic },
+    ].map(
+      (group) =>
+        group.list.length > 0 && (
+          <section>
+            <h2>{group.title}</h2>
+            <div class="grid grid-2">
+              {group.list.map((r) => (
+                <div class="card rivalry">
+                  <div class="names">
+                    <a href={url(`/owners/${slug(r.owners[0])}`)}>{r.owners[0]}</a>
+                    <span class="vs">vs</span>
+                    <a href={url(`/owners/${slug(r.owners[1])}`)}>{r.owners[1]}</a>
+                  </div>
+                  {r.frozen_after && <p class="pill">Frozen after {r.frozen_after}</p>}
+                  <table>
+                    <tbody>
+                      {[
+                        ["Championships", r.championships[0], r.championships[1], String],
+                        ["H2H wins", r.wins[0], r.wins[1], String],
+                        ["H2H points", r.points[0], r.points[1], pts],
+                      ].map(([label, a, b, fmt]: any) => (
+                        <tr>
+                          <td class:list={["num", "stat", lead(a, b)]}>{fmt(a)}</td>
+                          <td class="label">{label}</td>
+                          <td class:list={["stat", lead(b, a)]}>{fmt(b)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {r.ties > 0 && <p class="muted small center">{r.ties} tie{r.ties > 1 && "s"}</p>}
+                  {r.note && <p class="muted small center"><em>“{r.note}”</em></p>}
+                </div>
+              ))}
+            </div>
+          </section>
+        ),
+    )
+  }
+
+  <h2>Head-to-head grid</h2>
+  <p class="muted small">Read across: the row owner's record against each column owner.</p>
+  <div class="card table-wrap matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th></th>
+          {owners.map((o) => <th class="col"><span>{o}</span></th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {
+          owners.map((row) => (
+            <tr>
+              <th class="rowhead"><a href={url(`/owners/${slug(row)}`)}>{row}</a></th>
+              {owners.map((col) => {
+                if (row === col) return <td class="self" />;
+                const v = versus(row, col);
+                if (!v) return <td class="empty muted">·</td>;
+                return (
+                  <td
+                    style={cellStyle(v.wins, v.losses)}
+                    title={`${row} vs ${col}: ${record(v.wins, v.losses, v.ties)}, ${pts(v.points_for)}–${pts(v.points_against)} pts`}
+                  >
+                    {record(v.wins, v.losses, v.ties)}
+                  </td>
+                );
+              })}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</Base>
+
+<style>
+  .rivalry { text-align: center; }
+  .names {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .names a { color: var(--text); }
+  .vs { font-size: 0.9rem; color: var(--accent); }
+  .rivalry table { margin-top: 8px; }
+  .rivalry td { border: none; padding: 5px 8px; }
+  .label {
+    text-align: center;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    width: 40%;
+  }
+  .stat { font-variant-numeric: tabular-nums; font-size: 1.1rem; width: 30%; }
+  .stat.num { text-align: right; }
+  .stat.lead { font-weight: 700; color: var(--win); }
+  .stat.trail { color: var(--muted); }
+  .center { text-align: center; margin: 4px 0 0; }
+  .matrix-wrap { padding: 8px; }
+  .matrix { font-size: 0.8rem; width: auto; }
+  .matrix td, .matrix th { border: 1px solid var(--border); padding: 4px 6px; text-align: center; white-space: nowrap; }
+  .matrix .col { vertical-align: bottom; height: 90px; }
+  .matrix .col span { writing-mode: vertical-rl; transform: rotate(180deg); text-transform: none; letter-spacing: 0; font-size: 0.8rem; color: var(--text); }
+  .matrix .rowhead { text-align: left; text-transform: none; letter-spacing: 0; font-size: 0.85rem; position: sticky; left: 0; background: var(--surface); }
+  .matrix .self { background: var(--surface-2); }
+  .matrix tbody tr:hover { background: transparent; }
+</style>

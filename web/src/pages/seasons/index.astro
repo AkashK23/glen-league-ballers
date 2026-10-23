@@ -1,0 +1,32 @@
+---
+import Base from "../../layouts/Base.astro";
+import { seasons, url } from "../../lib/data";
+---
+
+<Base title="Seasons">
+  <h1>Seasons</h1>
+  <div class="grid grid-3">
+    {
+      seasons.map((s) => (
+        <a class="card season" href={url(`/seasons/${s.year}`)}>
+          <div class="year">{s.year}</div>
+          {s.complete ? (
+            <>
+              <div>🏆 <strong>{s.champion}</strong> <span class="muted small">over {s.runner_up}</span></div>
+              <div class="muted small">💩 {s.last_place}</div>
+            </>
+          ) : (
+            <div><span class="pill gold">In progress</span> <span class="muted small">Leader: {s.standings[0]?.owner}</span></div>
+          )}
+          <div class="muted small">{s.standings.length} teams · {s.playoff_team_count}-team playoff</div>
+        </a>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .season { color: var(--text); display: flex; flex-direction: column; gap: 4px; }
+  .season:hover { text-decoration: none; border-color: var(--accent); }
+  .year { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--brand); }
+</style>

@@ -1,6 +1,6 @@
 """
   python -m league_core sync [--year 2026 ...]   pull seasons from the platform into data/seasons/
-  python -m league_core build                    compute stats into public/data/ for the website
+  python -m league_core build                    compute stats into web/src/data/ for the website
 """
 
 from __future__ import annotations
@@ -11,9 +11,9 @@ import tomllib
 from datetime import date
 from pathlib import Path
 
+from .export import build_site_data
 from .history import LeagueHistory
 from .providers import get_provider
-from .stats import h2h_matrix, record_book, rivalry_report
 from .storage import load_seasons, save_season
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -53,27 +53,8 @@ def cmd_sync(config: dict, data_dir: Path, years: list[int] | None) -> None:
 def cmd_build(config: dict, data_dir: Path, out_dir: Path) -> None:
     history = LeagueHistory(load_seasons(data_dir), config.get("owners"))
     out_dir.mkdir(parents=True, exist_ok=True)
-
-    def write(name: str, payload) -> None:
+    for name, payload in build_site_data(history, config).items():
         (out_dir / name).write_text(json.dumps(payload, indent=2) + "\n")
-
-    write("records.json", record_book(history))
-    write("rivalries.json", rivalry_report(history, config.get("rivalries", [])))
-    write("h2h.json", h2h_matrix(history))
-    write(
-        "seasons.json",
-        [
-            {
-                "year": s.year,
-                "champion": history.owner_of(s.champion).name if s.champion else None,
-                "standings": [
-                    {**t.__dict__, "owner": history.owner_of(t).name}
-                    for t in sorted(s.teams, key=lambda t: (t.final_rank or t.seed or 99))
-                ],
-            }
-            for s in history.seasons
-        ],
-    )
     print(f"Built {len(history.seasons)} seasons -> {out_dir}")
 
 
@@ -85,7 +66,7 @@ def main() -> None:
     s = sub.add_parser("sync")
     s.add_argument("--year", type=int, action="append")
     b = sub.add_parser("build")
-    b.add_argument("--out", type=Path, default=ROOT / "public" / "data")
+    b.add_argument("--out", type=Path, default=ROOT / "web" / "src" / "data")
     args = p.parse_args()
 
     _load_dotenv(ROOT / ".env")

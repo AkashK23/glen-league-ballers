@@ -1,0 +1,76 @@
+---
+import Base from "../layouts/Base.astro";
+import RecordTable from "../components/RecordTable.astro";
+import { league, pct, pts, record, records } from "../lib/data";
+
+const { single_season: season, single_game: game, playoffs } = records;
+
+const ownerYear = { label: "Owner", value: (r: any) => `${r.owner} (${r.year})` };
+const gameWhen = { label: "When", value: (r: any) => `${r.year} · Wk ${r.week}` };
+const matchupCols = (valueKey: string) => [
+  { label: "Matchup", value: (r: any) => `${r.winner} vs ${r.loser}` },
+  gameWhen,
+  { label: "Score", value: (r: any) => `${pts(r.winner_points)}–${pts(r.loser_points)}`, num: true },
+  { label: "", value: (r: any) => pts(r[valueKey]), num: true },
+];
+
+const sections = [
+  {
+    title: "Single-season records",
+    note: "Completed seasons only.",
+    tables: [
+      { title: "Best record", rows: season.best_record, columns: [ownerYear, { label: "", value: (r: any) => `${record(r.wins, r.losses, r.ties)} (${pct(r.win_pct)})`, num: true }] },
+      { title: "Worst record", rows: season.worst_record, columns: [ownerYear, { label: "", value: (r: any) => `${record(r.wins, r.losses, r.ties)} (${pct(r.win_pct)})`, num: true }] },
+      { title: "Longest winning streak", rows: season.longest_win_streak, columns: [ownerYear, { label: "", value: (r: any) => r.win_streak, num: true }] },
+      { title: "Longest losing streak", rows: season.longest_losing_streak, columns: [ownerYear, { label: "", value: (r: any) => r.loss_streak, num: true }] },
+      { title: "Most points scored", rows: season.most_points_for, columns: [ownerYear, { label: "", value: (r: any) => pts(r.points_for), num: true }] },
+      { title: "Fewest points scored", rows: season.least_points_for, columns: [ownerYear, { label: "", value: (r: any) => pts(r.points_for), num: true }] },
+      { title: "Most points against", rows: season.most_points_against, columns: [ownerYear, { label: "", value: (r: any) => pts(r.points_against), num: true }] },
+      { title: "Fewest points against", rows: season.least_points_against, columns: [ownerYear, { label: "", value: (r: any) => pts(r.points_against), num: true }] },
+    ],
+  },
+  {
+    title: "Single-game records",
+    note: "One-week games in the regular season and championship bracket.",
+    tables: [
+      { title: "Most points", rows: game.most_points, columns: [{ label: "Owner", value: (r: any) => `${r.owner} vs ${r.opponent}` }, gameWhen, { label: "", value: (r: any) => pts(r.points), num: true }] },
+      { title: "Fewest points", rows: game.least_points, columns: [{ label: "Owner", value: (r: any) => `${r.owner} vs ${r.opponent}` }, gameWhen, { label: "", value: (r: any) => pts(r.points), num: true }] },
+      { title: "Largest margin of victory", rows: game.largest_margin, columns: matchupCols("margin") },
+      { title: "Most combined points", rows: game.most_combined, columns: matchupCols("combined") },
+      { title: "Fewest combined points", rows: game.least_combined, columns: matchupCols("combined") },
+    ],
+  },
+  {
+    title: "Playoff records",
+    note: "Championship bracket only.",
+    tables: [
+      { title: "Most championships", rows: playoffs.most_championships.filter((r: any) => r.championships > 0), columns: [{ label: "Owner", value: (r: any) => r.owner }, { label: "", value: (r: any) => r.championships, num: true }] },
+      { title: "Most playoff appearances", rows: playoffs.most_appearances, columns: [{ label: "Owner", value: (r: any) => r.owner }, { label: "", value: (r: any) => r.appearances, num: true }] },
+      { title: "Most playoff wins", rows: playoffs.most_playoff_wins, columns: [{ label: "Owner", value: (r: any) => `${r.owner} (${record(r.wins, r.losses)})` }, { label: "", value: (r: any) => r.wins, num: true }] },
+      { title: "Best playoff win %", rows: playoffs.best_playoff_win_pct, columns: [{ label: "Owner", value: (r: any) => `${r.owner} (${record(r.wins, r.losses)})` }, { label: "", value: (r: any) => pct(r.win_pct), num: true }] },
+      { title: "Most points, 1-week playoff game", rows: playoffs.most_points_in_1_week_playoff_game, columns: [{ label: "Owner", value: (r: any) => `${r.owner} vs ${r.opponent}` }, gameWhen, { label: "", value: (r: any) => pts(r.points), num: true }] },
+      { title: "Most points, 2-week playoff matchup", rows: playoffs.most_points_in_2_week_playoff_matchup, columns: [{ label: "Owner", value: (r: any) => `${r.owner} vs ${r.opponent}` }, { label: "When", value: (r: any) => String(r.year) }, { label: "", value: (r: any) => pts(r.points), num: true }] },
+      { title: "Largest playoff margin of victory", rows: playoffs.largest_playoff_margin, columns: [{ label: "Owner", value: (r: any) => `${r.owner} over ${r.opponent}` }, { label: "When", value: (r: any) => String(r.year) }, { label: "", value: (r: any) => pts(r.margin), num: true }] },
+    ],
+  },
+];
+---
+
+<Base title="Records">
+  <h1>Records</h1>
+  <p class="muted">Every season since {league.first_year}. Ties share a rank.</p>
+
+  {
+    sections.map((s) => (
+      <section>
+        <h2>{s.title}</h2>
+        <p class="muted small">{s.note}</p>
+        <div class="grid grid-2">
+          {s.tables.map((t) => (
+            <RecordTable title={t.title} rows={t.rows} columns={t.columns} />
+          ))}
+        </div>
+      </section>
+    ))
+  }
+</Base>

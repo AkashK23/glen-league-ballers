@@ -1,0 +1,55 @@
+---
+import { type TeamRow, pts, record, slug, url } from "../lib/data";
+
+interface Props {
+  rows: TeamRow[];
+  final?: boolean; // show final finish instead of seed
+  playoffTeams?: number;
+  limit?: number;
+  compact?: boolean; // drop PA and team name for narrow cards
+}
+const { rows, final = false, playoffTeams = 0, limit, compact = false } = Astro.props;
+const shown = limit ? rows.slice(0, limit) : rows;
+---
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>{final ? "Finish" : "Seed"}</th>
+        <th>Owner</th>
+        {!compact && <th>Team</th>}
+        <th class="num">Record</th>
+        <th class="num">PF</th>
+        {!compact && <th class="num">PA</th>}
+        {final && <th class="num">Seed</th>}
+      </tr>
+    </thead>
+    <tbody>
+      {
+        shown.map((t, i) => {
+          const rank = final ? t.final_rank : (t.seed ?? i + 1);
+          return (
+            <tr class:list={{ first: rank === 1, cutoff: !final && playoffTeams && rank === playoffTeams }}>
+              <td class="num rank">
+                {final && rank === 1 ? "🏆" : rank}
+              </td>
+              <td><a href={url(`/owners/${slug(t.owner)}`)}>{t.owner}</a></td>
+              {!compact && <td class="team">{t.team_name}</td>}
+              <td class="num">{record(t.wins, t.losses, t.ties)}</td>
+              <td class="num">{pts(t.points_for)}</td>
+              {!compact && <td class="num">{pts(t.points_against)}</td>}
+              {final && <td class="num muted">{t.seed ?? "—"}</td>}
+            </tr>
+          );
+        })
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .rank { text-align: center; width: 3.5em; }
+  .team { color: var(--muted); max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  tr.cutoff td { border-bottom: 2px dashed var(--accent); }
+</style>

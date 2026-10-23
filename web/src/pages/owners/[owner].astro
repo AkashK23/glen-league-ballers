@@ -1,0 +1,113 @@
+---
+import Base from "../../layouts/Base.astro";
+import { league, ordinal, pct, pts, record, records, seasons, slug, url, versus } from "../../lib/data";
+
+export function getStaticPaths() {
+  return league.owners.map((o) => ({ params: { owner: slug(o) }, props: { owner: o } }));
+}
+
+const { owner } = Astro.props as { owner: string };
+const career = (records.all_time.career as any[]).find((r) => r.owner === owner);
+const playoff = (records.playoffs.most_championships as any[]).find((r) => r.owner === owner);
+
+const history = seasons
+  .map((s) => ({ s, t: s.standings.find((t) => t.owner === owner) }))
+  .filter((x) => x.t);
+
+const rivals = league.owners
+  .filter((o) => o !== owner)
+  .map((o) => ({ o, v: versus(owner, o) }))
+  .filter((x) => x.v)
+  .sort((a, b) => b.v!.wins + b.v!.losses - (a.v!.wins + a.v!.losses));
+
+const bests = [
+  ...(records.single_game.most_points as any[]).filter((r) => r.owner === owner).map((r) => `Top-10 single game: ${pts(r.points)} (${r.year} Wk ${r.week})`),
+  ...(records.single_season.most_points_for as any[]).filter((r) => r.owner === owner).map((r) => `Top-10 scoring season: ${pts(r.points_for)} (${r.year})`),
+  ...(records.single_season.longest_win_streak as any[]).filter((r) => r.owner === owner).slice(0, 1).map((r) => `Win streak: ${r.win_streak} (${r.year})`),
+];
+---
+
+<Base title={owner}>
+  <h1>{owner}</h1>
+  {
+    playoff?.championships > 0 && (
+      <p class="cups">{"🏆".repeat(playoff.championships)}</p>
+    )
+  }
+
+  {
+    career && (
+      <div class="tiles">
+        <div class="card tile"><span class="muted small">Seasons</span><b>{career.seasons}</b></div>
+        <div class="card tile"><span class="muted small">Record</span><b>{record(career.wins, career.losses, career.ties)}</b><span class="muted small">{pct(career.win_pct)}</span></div>
+        <div class="card tile"><span class="muted small">Titles</span><b>{playoff?.championships ?? 0}</b></div>
+        <div class="card tile"><span class="muted small">Playoffs</span><b>{playoff?.appearances ?? 0}</b><span class="muted small">{record(playoff?.wins ?? 0, playoff?.losses ?? 0)} in games</span></div>
+        <div class="card tile"><span class="muted small">Points for</span><b>{pts(career.points_for)}</b></div>
+        <div class="card tile"><span class="muted small">Scoring titles</span><b>{career.scoring_titles}</b></div>
+      </div>
+    )
+  }
+
+  {
+    bests.length > 0 && (
+      <ul class="bests">
+        {bests.map((b) => <li>{b}</li>)}
+      </ul>
+    )
+  }
+
+  <div class="grid grid-2">
+    <section>
+      <h2>Season by season</h2>
+      <div class="card table-wrap">
+        <table>
+          <thead><tr><th>Year</th><th>Team</th><th class="num">Record</th><th class="num">PF</th><th class="num">Finish</th></tr></thead>
+          <tbody>
+            {
+              history.map(({ s, t }) => (
+                <tr class:list={{ first: t!.final_rank === 1 }}>
+                  <td><a href={url(`/seasons/${s.year}`)}>{s.year}</a></td>
+                  <td class="muted team">{t!.team_name}</td>
+                  <td class="num">{record(t!.wins, t!.losses, t!.ties)}</td>
+                  <td class="num">{pts(t!.points_for)}</td>
+                  <td class="num">
+                    {s.complete ? (t!.final_rank === 1 ? "🏆 1st" : t!.final_rank ? ordinal(t!.final_rank) : "—") : <span class="pill">Now {ordinal(t!.seed ?? 0)}</span>}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Head-to-head</h2>
+      <div class="card table-wrap">
+        <table>
+          <thead><tr><th>Opponent</th><th class="num">Record</th><th class="num">Points</th></tr></thead>
+          <tbody>
+            {
+              rivals.map(({ o, v }) => (
+                <tr>
+                  <td><a href={url(`/owners/${slug(o)}`)}>{o}</a></td>
+                  <td class:list={["num", { win: v!.wins > v!.losses, loss: v!.wins < v!.losses }]}>{record(v!.wins, v!.losses, v!.ties)}</td>
+                  <td class="num muted">{pts(v!.points_for)}–{pts(v!.points_against)}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .cups { font-size: 1.6rem; margin: -8px 0 12px; letter-spacing: 3px; }
+  .tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); }
+  .tile { display: flex; flex-direction: column; gap: 2px; }
+  .tile b { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; }
+  .bests { margin: 16px 0 0; padding-left: 20px; color: var(--muted); }
+  .team { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+</style>

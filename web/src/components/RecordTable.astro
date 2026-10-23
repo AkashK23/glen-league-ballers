@@ -1,0 +1,70 @@
+---
+// One record category: top 5 shown, the rest of the top 10 behind a toggle.
+interface Column {
+  label: string;
+  value: (row: any) => string | number;
+  num?: boolean;
+}
+interface Props {
+  title: string;
+  rows: any[];
+  columns: Column[];
+  show?: number;
+}
+const { title, rows, columns, show = 5 } = Astro.props;
+
+// Ties share a rank, so "T-3" reads like the Glen record book.
+const key = columns[columns.length - 1].value;
+const ranks: string[] = [];
+rows.forEach((r, i) => {
+  const tiedPrev = i > 0 && key(r) === key(rows[i - 1]);
+  const tiedNext = i < rows.length - 1 && key(r) === key(rows[i + 1]);
+  const rank = tiedPrev ? ranks[i - 1].replace("T-", "") : String(i + 1);
+  ranks.push(tiedPrev || tiedNext ? `T-${rank}` : rank);
+});
+const top = rows.slice(0, show);
+const rest = rows.slice(show);
+---
+
+<div class="card record">
+  <h3>{title}</h3>
+  {
+    rows.length === 0 ? (
+      <p class="muted small">No data yet.</p>
+    ) : (
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            {top.map((r, i) => (
+              <tr class:list={{ first: ranks[i].replace("T-", "") === "1" }}>
+                <td class="rank muted">{ranks[i]}</td>
+                {columns.map((c) => <td class:list={{ num: c.num }}>{c.value(r)}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {rest.length > 0 && (
+          <details>
+            <summary>Show top {rows.length}</summary>
+            <table>
+              <tbody>
+                {rest.map((r, i) => (
+                  <tr>
+                    <td class="rank muted">{ranks[i + show]}</td>
+                    {columns.map((c) => <td class:list={{ num: c.num }}>{c.value(r)}</td>)}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </details>
+        )}
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .record h3 { margin-bottom: 8px; color: var(--text); }
+  .rank { width: 3.2em; font-size: 0.8rem; white-space: nowrap; }
+  tr.first td:last-child { color: var(--accent); }
+</style>

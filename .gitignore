@@ -6,4 +6,5 @@ __pycache__/
 .DS_Store
 node_modules/
 dist/
-public/data/
+web/src/data/
+.astro/

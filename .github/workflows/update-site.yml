@@ -1,0 +1,76 @@
+# Weekly: pull the current season from the platform, commit the data, rebuild
+# and deploy the site to GitHub Pages.
+#
+# Setup once the repo is on GitHub:
+#   Settings > Secrets and variables > Actions: add ESPN_S2 and ESPN_SWID
+#   Settings > Pages > Source: "GitHub Actions"
+name: Update site
+
+on:
+  schedule:
+    - cron: "0 13 * * 2" # Tuesdays 13:00 UTC, after Monday Night Football
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install -e '.[espn]'
+
+      - name: Sync current season
+        if: github.event_name != 'push'
+        env:
+          ESPN_S2: ${{ secrets.ESPN_S2 }}
+          ESPN_SWID: ${{ secrets.ESPN_SWID }}
+        run: python -m league_core sync --year "$(date +%Y)"
+
+      - name: Commit updated data
+        if: github.event_name != 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/seasons
+          git diff --cached --quiet || git commit -m "Sync $(date +%Y) season data"
+          git push
+
+      - run: python -m league_core build
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - working-directory: web
+        run: npm ci && npm run build
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

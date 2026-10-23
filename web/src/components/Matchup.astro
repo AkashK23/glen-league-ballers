@@ -1,0 +1,52 @@
+---
+import { type MatchupRow, pts, slug, url } from "../lib/data";
+
+interface Props {
+  m: MatchupRow;
+  label?: string;
+}
+const { m, label } = Astro.props;
+const homeWon = m.completed && m.away && m.home.score > m.away.score;
+const awayWon = m.completed && m.away && m.away.score > m.home.score;
+---
+
+<div class="matchup">
+  {label && <div class="label">{label}{m.weeks > 1 && ` · ${m.weeks} weeks`}</div>}
+  <div class:list={["side", { won: homeWon, lost: awayWon }]}>
+    <a href={url(`/owners/${slug(m.home.owner)}`)}>{m.home.owner}</a>
+    <span class="num">{m.completed ? pts(m.home.score) : "—"}</span>
+  </div>
+  {
+    m.away ? (
+      <div class:list={["side", { won: awayWon, lost: homeWon }]}>
+        <a href={url(`/owners/${slug(m.away.owner)}`)}>{m.away.owner}</a>
+        <span class="num">{m.completed ? pts(m.away.score) : "—"}</span>
+      </div>
+    ) : (
+      <div class="side bye muted">Bye</div>
+    )
+  }
+</div>
+
+<style>
+  .matchup {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    min-width: 0;
+  }
+  .label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .side { display: flex; justify-content: space-between; gap: 8px; padding: 2px 0; }
+  .side a { color: var(--text); }
+  .won a, .won .num { font-weight: 700; }
+  .won .num { color: var(--win); }
+  .lost { opacity: 0.7; }
+  .bye { font-style: italic; }
+</style>
