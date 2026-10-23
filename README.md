@@ -61,9 +61,23 @@ Pages: home (reigning champ, current standings, halls of champions/shame),
 seasons, records, rivalries (featured + full H2H grid), statistics, and a
 profile per owner.
 
-Things the API can't know (Player of the Year, recaps, jokes) go in
-`web/src/content/seasons/<year>.md`; see `2025.md` for the format.
-Featured rivalries and owner nicknames live in `config/league.toml`.
+Every game links to a box score page (`/seasons/<year>/week/<n>`) with both
+lineups, slot by slot, plus bench and projections. ESPN only has player-level
+box scores from 2019 on; earlier weeks show final scores only.
+
+Power rankings are computed weekly in `stats/power.py` from results alone
+(ESPN's formula: 80% two-step dominance, 15% points per game, 5% average
+margin), so they keep working on any platform.
+
+Hand-written content:
+- `web/src/content/seasons/<year>.md`: recap and `player_of_the_year` (see `2025.md`)
+- `web/src/content/power-rankings/<year>/<label>.md`: commissioner rankings with
+  `title:` and `order:` frontmatter; they show above the computed weekly ones
+- `web/src/assets/hero/<key>.jpg`: banner photos. Keys: `home`, `season`,
+  `records`, `rivalries`, `stats`, `owner`, and `default` as the fallback.
+  Without photos, a drawn striped background is used.
+
+Featured rivalries, owner nicknames and site branding live in `config/league.toml`.
 
 ## Deploying
 

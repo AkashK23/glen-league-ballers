@@ -2,15 +2,18 @@
 import Base from "../layouts/Base.astro";
 import StandingsTable from "../components/StandingsTable.astro";
 import Matchup from "../components/Matchup.astro";
-import { type MatchupRow, completedSeasons, currentSeason, league, records, record, slug, url } from "../lib/data";
+import PowerTable from "../components/PowerTable.astro";
+import Trophy from "../components/Trophy.astro";
+import Toilet from "../components/Toilet.astro";
+import { type MatchupRow, completedSeasons, currentSeason, league, record, slug, url } from "../lib/data";
 
 const reigning = completedSeasons[0];
 const champRow = reigning?.standings.find((t) => t.final_rank === 1);
-
-const trophies = (records.playoffs.most_championships as any[]).filter((r) => r.championships > 0);
+const oldestFirst = completedSeasons.slice().reverse();
 
 let currentWeek = 0;
 let latestGames: MatchupRow[] = [];
+const power = currentSeason?.power_rankings.at(-1);
 if (currentSeason) {
   const played = currentSeason.matchups.filter((m) => m.completed && m.kind === "regular");
   currentWeek = Math.max(0, ...played.map((m) => m.week));
@@ -18,146 +21,128 @@ if (currentSeason) {
 }
 ---
 
-<Base>
-  <section class="hero">
-    <p class="eyebrow">Est. {league.first_year} · {completedSeasons.length} seasons</p>
-    <h1>{league.name}</h1>
-    <p class="tagline">The history, statistics and records of the league.{league.tagline && <em> {league.tagline}.</em>}</p>
-  </section>
-
-  <div class="grid grid-2">
-    {
-      reigning && champRow && (
-        <a class="card champion" href={url(`/seasons/${reigning.year}`)}>
-          <span class="pill gold">Reigning {reigning.year} champion</span>
-          <div class="trophy">🏆</div>
-          <div class="champ-name">{reigning.champion}</div>
-          <div class="muted">{champRow.team_name}</div>
-          <div class="small muted">
-            {record(champRow.wins, champRow.losses, champRow.ties)} regular season · beat {reigning.runner_up} in the final
-          </div>
-        </a>
-      )
-    }
-
-    {
-      currentSeason && (
-        <div class="card">
-          <div class="row-head">
-            <h3>{currentSeason.year} season · Week {currentWeek}</h3>
-            <a class="small" href={url(`/seasons/${currentSeason.year}`)}>Full standings →</a>
-          </div>
-          <StandingsTable rows={currentSeason.standings} limit={6} compact playoffTeams={currentSeason.playoff_team_count} />
-        </div>
-      )
-    }
-  </div>
+<Base
+  heroTitle={league.hero_title || `Welcome to the ${league.name}`}
+  heroSub={`The history, statistics, and records of the ${league.name} Fantasy Football League`}
+  hero="home"
+  tall
+>
+  <p slot="hero" class="tagline">{league.tagline}</p>
 
   {
-    latestGames.length > 0 && (
-      <>
-        <h2>Week {currentWeek} results</h2>
-        <div class="games">
-          {latestGames.map((m) => (
-            <Matchup m={m} />
-          ))}
-        </div>
-      </>
+    reigning && champRow && (
+      <section class="reigning">
+        <h2 class="section-title">Reigning {reigning.year} Champion: {reigning.champion}</h2>
+        <a class="big-trophy" href={url(`/seasons/${reigning.year}`)}>
+          <Trophy size={220} />
+          <span class="shine" />
+        </a>
+        <p class="center muted">
+          <strong>{champRow.team_name}</strong> · {record(champRow.wins, champRow.losses, champRow.ties)} · beat {reigning.runner_up} in the final
+        </p>
+      </section>
     )
   }
 
-  <div class="grid grid-2 halls">
-    <section>
-      <h2>Hall of Champions</h2>
-      <div class="card">
-        <table>
-          <tbody>
-            {
-              completedSeasons.map((s) => (
-                <tr>
-                  <td class="year"><a href={url(`/seasons/${s.year}`)}>{s.year}</a></td>
-                  <td>🏆 <a href={url(`/owners/${slug(s.champion!)}`)}><strong>{s.champion}</strong></a></td>
-                  <td class="muted small team">{s.standings.find((t) => t.final_rank === 1)?.team_name}</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section>
-      <h2>Hall of Shame</h2>
-      <div class="card">
-        <table>
-          <tbody>
-            {
-              completedSeasons.map((s) => (
-                <tr>
-                  <td class="year"><a href={url(`/seasons/${s.year}`)}>{s.year}</a></td>
-                  <td class="shame">💩 <a href={url(`/owners/${slug(s.last_place!)}`)}>{s.last_place}</a></td>
-                  <td class="muted small team">{s.standings[s.standings.length - 1]?.team_name}</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </div>
-
-  <h2>Trophy case</h2>
-  <div class="trophies">
-    {
-      trophies.map((r) => (
-        <a class="card trophy-card" href={url(`/owners/${slug(r.owner)}`)}>
-          <div class="cups">{"🏆".repeat(r.championships)}</div>
-          <div class="owner">{r.owner}</div>
-          <div class="muted small">
-            {r.championships} title{r.championships > 1 ? "s" : ""} · {r.appearances} playoff trips
+  {
+    currentSeason && (
+      <section>
+        <h2 class="section-title">The {currentSeason.year} Season · Week {currentWeek}</h2>
+        <div class="grid grid-2">
+          {power && (
+            <div class="card">
+              <h3>Power rankings</h3>
+              <PowerTable rows={power.rankings} limit={6} />
+              <a class="small" href={url(`/seasons/${currentSeason.year}#power`)}>All power rankings →</a>
+            </div>
+          )}
+          <div class="card">
+            <h3>Standings</h3>
+            <StandingsTable rows={currentSeason.standings} limit={6} compact playoffTeams={currentSeason.playoff_team_count} />
+            <a class="small" href={url(`/seasons/${currentSeason.year}`)}>Full standings →</a>
           </div>
-        </a>
-      ))
-    }
-  </div>
+        </div>
+        {latestGames.length > 0 && (
+          <>
+            <h3 class="results-head">Week {currentWeek} results · tap a game for the box score</h3>
+            <div class="games stagger">
+              {latestGames.map((m) => <Matchup m={m} year={currentSeason.year} />)}
+            </div>
+          </>
+        )}
+      </section>
+    )
+  }
+
+  <section>
+    <h2 class="section-title">Hall of Champions</h2>
+    <div class="hall stagger">
+      {
+        oldestFirst.map((s) => (
+          <a class="hall-item" href={url(`/seasons/${s.year}`)}>
+            <Trophy size={130} />
+            <span class="cap">{s.year} {league.short_name} Champion</span>
+            <strong>{s.champion}</strong>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Hall of Shame</h2>
+    <div class="hall stagger">
+      {
+        oldestFirst.map((s) => (
+          <a class="hall-item shame" href={url(`/owners/${slug(s.last_place!)}`)}>
+            <Toilet size={110} />
+            <span class="cap">{s.year} {league.short_name} Loser</span>
+            <strong>{s.last_place}</strong>
+          </a>
+        ))
+      }
+    </div>
+  </section>
 </Base>
 
 <style>
-  .hero { padding: 12px 0 28px; }
-  .eyebrow {
-    color: var(--accent);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-size: 0.8rem;
-    margin: 0 0 6px;
+  .tagline { font-style: italic; text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; margin-top: 18px; text-shadow: 0 1px 10px rgb(0 0 0 / 0.5); }
+  .big-trophy { position: relative; display: block; width: fit-content; margin: 0 auto 12px; overflow: hidden; color: var(--text); }
+  .big-trophy :global(svg) { display: block; animation: float 5s ease-in-out infinite; }
+  @keyframes float { 50% { transform: translateY(-8px); } }
+  .shine {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.65) 50%, transparent 65%);
+    transform: translateX(-120%);
+    animation: shine 4.5s ease-in-out 1.2s infinite;
+    mix-blend-mode: overlay;
+    pointer-events: none;
   }
-  .tagline { color: var(--muted); font-size: 1.05rem; margin: 0; }
-  .champion {
+  @keyframes shine { 0%, 60% { transform: translateX(-120%); } 85%, 100% { transform: translateX(120%); } }
+  .results-head { margin: 28px 0 10px; }
+  .games { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); }
+  .hall {
+    display: grid;
+    gap: 34px 12px;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .hall-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 4px;
-    color: var(--text);
-    background: linear-gradient(160deg, var(--accent-soft), var(--surface) 70%);
+    color: var(--heading);
+    font-size: 0.78rem;
+    line-height: 1.35;
   }
-  .champion:hover { text-decoration: none; border-color: var(--accent); }
-  .trophy { font-size: 3.5rem; line-height: 1; margin: 10px 0 4px; }
-  .champ-name {
-    font-family: var(--font-display);
-    font-size: 2.25rem;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-  .row-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-  .games { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
-  .year { width: 4em; font-weight: 600; }
-  .team { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .shame a { color: var(--shame); }
-  .trophies { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); }
-  .trophy-card { color: var(--text); text-align: center; }
-  .trophy-card:hover { text-decoration: none; border-color: var(--accent); }
-  .cups { font-size: 1.4rem; letter-spacing: 2px; }
-  .owner { font-family: var(--font-display); font-size: 1.3rem; text-transform: uppercase; font-weight: 600; }
+  .hall-item:hover { text-decoration: none; }
+  .hall-item :global(svg) { transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.35s; margin-bottom: 10px; }
+  .hall-item:hover :global(svg) { transform: translateY(-8px) scale(1.06); filter: drop-shadow(0 10px 12px rgb(0 0 0 / 0.18)); }
+  .hall-item.shame:hover :global(svg) { transform: rotate(-6deg) scale(1.05); }
+  .cap { color: var(--text); }
+  .hall-item strong { text-transform: uppercase; letter-spacing: 0.04em; }
+  @media (min-width: 700px) { .hall { grid-template-columns: repeat(4, 1fr); } }
 </style>

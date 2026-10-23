@@ -3,8 +3,7 @@ import Base from "../../layouts/Base.astro";
 import { seasons, url } from "../../lib/data";
 ---
 
-<Base title="Seasons">
-  <h1>Seasons</h1>
+<Base title="Seasons" heroTitle="Seasons" heroSub="Every year of the league" hero="season">
   <div class="grid grid-3">
     {
       seasons.map((s) => (
@@ -13,7 +12,7 @@ import { seasons, url } from "../../lib/data";
           {s.complete ? (
             <>
               <div>🏆 <strong>{s.champion}</strong> <span class="muted small">over {s.runner_up}</span></div>
-              <div class="muted small">💩 {s.last_place}</div>
+              <div class="muted small">Last place: {s.last_place}</div>
             </>
           ) : (
             <div><span class="pill gold">In progress</span> <span class="muted small">Leader: {s.standings[0]?.owner}</span></div>
@@ -28,5 +27,7 @@ import { seasons, url } from "../../lib/data";
 <style>
   .season { color: var(--text); display: flex; flex-direction: column; gap: 4px; }
   .season:hover { text-decoration: none; border-color: var(--accent); }
-  .year { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--brand); }
+  .year { font-size: 2rem; font-weight: 800; color: var(--heading); }
+  .season { transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+  .season:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgb(0 0 0 / 0.08); }
 </style>

@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import Trophy from "../../components/Trophy.astro";
 import { league, ordinal, pct, pts, record, records, seasons, slug, url, versus } from "../../lib/data";
 
 export function getStaticPaths() {
@@ -27,23 +28,22 @@ const bests = [
 ];
 ---
 
-<Base title={owner}>
-  <h1>{owner}</h1>
+<Base title={owner} heroTitle={owner} heroKicker="Owner profile" heroSub={playoff?.championships ? `${playoff.championships}× ${league.short_name} champion` : `${career?.seasons ?? 0} seasons in the league`} hero="owner">
   {
     playoff?.championships > 0 && (
-      <p class="cups">{"🏆".repeat(playoff.championships)}</p>
+      <div class="cups">{Array.from({ length: playoff.championships }, () => <Trophy size={70} />)}</div>
     )
   }
 
   {
     career && (
       <div class="tiles">
-        <div class="card tile"><span class="muted small">Seasons</span><b>{career.seasons}</b></div>
+        <div class="card tile"><span class="muted small">Seasons</span><b data-count={career.seasons}>{career.seasons}</b></div>
         <div class="card tile"><span class="muted small">Record</span><b>{record(career.wins, career.losses, career.ties)}</b><span class="muted small">{pct(career.win_pct)}</span></div>
-        <div class="card tile"><span class="muted small">Titles</span><b>{playoff?.championships ?? 0}</b></div>
-        <div class="card tile"><span class="muted small">Playoffs</span><b>{playoff?.appearances ?? 0}</b><span class="muted small">{record(playoff?.wins ?? 0, playoff?.losses ?? 0)} in games</span></div>
-        <div class="card tile"><span class="muted small">Points for</span><b>{pts(career.points_for)}</b></div>
-        <div class="card tile"><span class="muted small">Scoring titles</span><b>{career.scoring_titles}</b></div>
+        <div class="card tile"><span class="muted small">Titles</span><b data-count={playoff?.championships ?? 0}>{playoff?.championships ?? 0}</b></div>
+        <div class="card tile"><span class="muted small">Playoffs</span><b data-count={playoff?.appearances ?? 0}>{playoff?.appearances ?? 0}</b><span class="muted small">{record(playoff?.wins ?? 0, playoff?.losses ?? 0)} in games</span></div>
+        <div class="card tile"><span class="muted small">Points for</span><b data-count={career.points_for} data-decimals="2">{pts(career.points_for)}</b></div>
+        <div class="card tile"><span class="muted small">Scoring titles</span><b data-count={career.scoring_titles}>{career.scoring_titles}</b></div>
       </div>
     )
   }
@@ -58,7 +58,7 @@ const bests = [
 
   <div class="grid grid-2">
     <section>
-      <h2>Season by season</h2>
+      <h2 class="section-title">Season by Season</h2>
       <div class="card table-wrap">
         <table>
           <thead><tr><th>Year</th><th>Team</th><th class="num">Record</th><th class="num">PF</th><th class="num">Finish</th></tr></thead>
@@ -82,7 +82,7 @@ const bests = [
     </section>
 
     <section>
-      <h2>Head-to-head</h2>
+      <h2 class="section-title">Head-to-Head</h2>
       <div class="card table-wrap">
         <table>
           <thead><tr><th>Opponent</th><th class="num">Record</th><th class="num">Points</th></tr></thead>
@@ -104,10 +104,10 @@ const bests = [
 </Base>
 
 <style>
-  .cups { font-size: 1.6rem; margin: -8px 0 12px; letter-spacing: 3px; }
+  .cups { display: flex; justify-content: center; gap: 6px; margin: -8px 0 24px; }
   .tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); }
   .tile { display: flex; flex-direction: column; gap: 2px; }
-  .tile b { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; }
+  .tile b { font-size: 1.6rem; font-weight: 800; color: var(--heading); }
   .bests { margin: 16px 0 0; padding-left: 20px; color: var(--muted); }
   .team { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 </style>

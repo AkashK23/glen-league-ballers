@@ -46,6 +46,31 @@ class TeamSeason:
 
 
 @dataclass
+class LineupEntry:
+    """One player on a fantasy roster for one NFL week."""
+
+    player_name: str
+    position: str  # the player's position: QB, RB, WR, TE, K, D/ST
+    slot: str  # where they were played: QB, RB, FLEX, ..., BE (bench), IR
+    points: float
+    projected_points: float | None = None
+    pro_team: str | None = None
+
+    @property
+    def is_starter(self) -> bool:
+        return self.slot not in ("BE", "IR")
+
+
+@dataclass
+class BoxScore:
+    """Both lineups for one NFL week of a matchup (2-week rounds have two)."""
+
+    nfl_week: int
+    home_lineup: list[LineupEntry]
+    away_lineup: list[LineupEntry]
+
+
+@dataclass
 class Matchup:
     week: int  # matchup period (a 2-week playoff round counts as one)
     home_team_id: str
@@ -54,6 +79,7 @@ class Matchup:
     away_score: float
     kind: MatchupKind = MatchupKind.REGULAR
     weeks: int = 1  # NFL weeks this matchup spans (some leagues use 2-week playoff rounds)
+    box_scores: list[BoxScore] = field(default_factory=list)  # empty if the platform has none
 
     @property
     def is_bye(self) -> bool:
@@ -107,7 +133,19 @@ class Season:
             playoff_team_count=d["playoff_team_count"],
             owners=[Owner(**o) for o in d["owners"]],
             teams=[TeamSeason(**t) for t in d["teams"]],
-            matchups=[Matchup(**{**m, "kind": MatchupKind(m["kind"])}) for m in d["matchups"]],
+            matchups=[_matchup_from_dict(m) for m in d["matchups"]],
             draft=[DraftPick(**p) for p in d.get("draft", [])],
             provider=d.get("provider", ""),
         )
+
+
+def _matchup_from_dict(m: dict[str, Any]) -> Matchup:
+    boxes = [
+        BoxScore(
+            nfl_week=b["nfl_week"],
+            home_lineup=[LineupEntry(**e) for e in b["home_lineup"]],
+            away_lineup=[LineupEntry(**e) for e in b["away_lineup"]],
+        )
+        for b in m.get("box_scores", [])
+    ]
+    return Matchup(**{**m, "kind": MatchupKind(m["kind"]), "box_scores": boxes})

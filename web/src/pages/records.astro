@@ -56,15 +56,13 @@ const sections = [
 ];
 ---
 
-<Base title="Records">
-  <h1>Records</h1>
-  <p class="muted">Every season since {league.first_year}. Ties share a rank.</p>
+<Base title="Records" heroTitle="Records" heroSub={`Every season since ${league.first_year}. Ties share a rank.`} hero="records">
 
   {
     sections.map((s) => (
       <section>
-        <h2>{s.title}</h2>
-        <p class="muted small">{s.note}</p>
+        <h2 class="section-title">{s.title}</h2>
+        <p class="muted small center">{s.note}</p>
         <div class="grid grid-2">
           {s.tables.map((t) => (
             <RecordTable title={t.title} rows={t.rows} columns={t.columns} />

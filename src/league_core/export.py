@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from .history import LeagueHistory, is_completed
 from .models import Season, TeamSeason
-from .stats import h2h_matrix, record_book, rivalry_report
+from .stats import h2h_matrix, power_rankings, record_book, rivalry_report
 
 
 def _team_row(h: LeagueHistory, t: TeamSeason) -> dict:
@@ -50,8 +50,21 @@ def season_detail(h: LeagueHistory, s: Season) -> dict:
         "regular_season_weeks": s.regular_season_weeks,
         "playoff_team_count": s.playoff_team_count,
         "standings": [_team_row(h, t) for t in (by_finish if complete else by_seed)],
+        "power_rankings": [
+            {
+                "week": w["week"],
+                "rankings": [
+                    {**{k: v for k, v in r.items() if k != "team_id"}, "owner": h.owner_of(s.team(r["team_id"])).name,
+                     "team_name": s.team(r["team_id"]).name}
+                    for r in w["rankings"]
+                ],
+            }
+            for w in power_rankings(s)
+        ],
+        "has_box_scores": any(m.box_scores for m in s.matchups),
         "matchups": [
             {
+                "id": f"{m.week}-{m.home_team_id}-{m.away_team_id or 'bye'}",
                 "week": m.week,
                 "weeks": m.weeks,
                 "kind": m.kind.value,
@@ -75,6 +88,28 @@ def season_detail(h: LeagueHistory, s: Season) -> dict:
     }
 
 
+def _lineup(entries) -> list[dict]:
+    order = ["QB", "RB", "WR", "TE", "RB/WR/TE", "WR/TE", "OP", "D/ST", "K", "BE", "IR"]
+    rank = {slot: i for i, slot in enumerate(order)}
+    return [
+        {"player": e.player_name, "pos": e.position, "slot": e.slot, "pts": e.points,
+         "proj": e.projected_points, "team": e.pro_team}
+        for e in sorted(entries, key=lambda e: rank.get(e.slot, 50))
+    ]
+
+
+def season_box_scores(s: Season) -> dict:
+    """{matchup id: [{nfl_week, home, away}]}"""
+    return {
+        f"{m.week}-{m.home_team_id}-{m.away_team_id or 'bye'}": [
+            {"nfl_week": b.nfl_week, "home": _lineup(b.home_lineup), "away": _lineup(b.away_lineup)}
+            for b in sorted(m.box_scores, key=lambda b: b.nfl_week)
+        ]
+        for m in s.matchups
+        if m.box_scores
+    }
+
+
 def build_site_data(h: LeagueHistory, config: dict) -> dict[str, object]:
     """{filename: payload} for everything the site needs."""
     seasons = [season_detail(h, s) for s in h.seasons]
@@ -83,6 +118,9 @@ def build_site_data(h: LeagueHistory, config: dict) -> dict[str, object]:
         "league.json": {
             "name": config.get("site", {}).get("name") or (latest.league_name if latest else ""),
             "tagline": config.get("site", {}).get("tagline", ""),
+            "short_name": config.get("site", {}).get("short_name", ""),
+            "wordmark": config.get("site", {}).get("wordmark", ""),
+            "hero_title": config.get("site", {}).get("hero_title", ""),
             "first_year": h.seasons[0].year if h.seasons else None,
             "latest_year": latest.year if latest else None,
             "owners": sorted(o.name for o in h.owners()),
@@ -91,4 +129,5 @@ def build_site_data(h: LeagueHistory, config: dict) -> dict[str, object]:
         "rivalries.json": rivalry_report(h, config.get("rivalries", [])),
         "h2h.json": h2h_matrix(h),
         "seasons.json": seasons,
+        **{f"boxscores/{s.year}.json": season_box_scores(s) for s in h.seasons if any(m.box_scores for m in s.matchups)},
     }

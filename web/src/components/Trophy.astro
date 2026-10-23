@@ -1,0 +1,37 @@
+---
+// Silver Lombardi-style trophy, drawn as SVG so it scales and needs no image files.
+interface Props {
+  size?: number;
+}
+const { size = 90 } = Astro.props;
+const id = `t${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<svg class="trophy-svg" width={size * 0.5} height={size} viewBox="0 0 60 120" role="img" aria-label="Championship trophy">
+  <defs>
+    <linearGradient id={`${id}s`} x1="0" x2="1">
+      <stop offset="0" stop-color="#8e949b" />
+      <stop offset="0.35" stop-color="#f4f6f8" />
+      <stop offset="0.55" stop-color="#c9ced4" />
+      <stop offset="1" stop-color="#7d838a" />
+    </linearGradient>
+    <linearGradient id={`${id}b`} x1="0" x2="1" gradientTransform="rotate(25)">
+      <stop offset="0" stop-color="#9aa0a7" />
+      <stop offset="0.4" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#8a9097" />
+    </linearGradient>
+  </defs>
+  <ellipse cx="30" cy="114" rx="18" ry="3" fill="currentColor" opacity="0.12" />
+  <!-- football -->
+  <g transform="rotate(-38 31 22)">
+    <ellipse cx="31" cy="22" rx="11" ry="19" fill={`url(#${id}b)`} stroke="#80868d" stroke-width="0.8" />
+    <line x1="31" y1="12" x2="31" y2="32" stroke="#80868d" stroke-width="0.9" />
+    {[15, 19, 23, 27, 31].map((y) => <line x1="28.5" y1={y - 2} x2="33.5" y2={y - 2} stroke="#80868d" stroke-width="0.8" />)}
+  </g>
+  <!-- stem -->
+  <path d="M27 38 L33 38 L41 94 L19 94 Z" fill={`url(#${id}s)`} stroke="#80868d" stroke-width="0.6" />
+  <path d="M26 64 L34 64 L35.5 76 L24.5 76 Z" fill="#6f757c" opacity="0.35" />
+  <!-- base -->
+  <rect x="15" y="94" width="30" height="18" rx="2" fill={`url(#${id}s)`} stroke="#80868d" stroke-width="0.6" />
+  <rect x="15" y="99" width="30" height="1" fill="#80868d" opacity="0.5" />
+</svg>

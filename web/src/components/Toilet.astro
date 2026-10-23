@@ -1,0 +1,36 @@
+---
+// Bronze toilet for the Hall of Shame, drawn as SVG.
+interface Props {
+  size?: number;
+}
+const { size = 90 } = Astro.props;
+const id = `p${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<svg class="toilet-svg" width={size * 0.8} height={size} viewBox="0 0 96 120" role="img" aria-label="Last place toilet">
+  <defs>
+    <linearGradient id={`${id}g`} x1="0" x2="1">
+      <stop offset="0" stop-color="#4d3a22" />
+      <stop offset="0.4" stop-color="#a88a5c" />
+      <stop offset="0.6" stop-color="#7c6240" />
+      <stop offset="1" stop-color="#3f2f1b" />
+    </linearGradient>
+    <radialGradient id={`${id}w`} cx="0.5" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#d8cdb8" />
+      <stop offset="1" stop-color="#8f7d5f" />
+    </radialGradient>
+  </defs>
+  <ellipse cx="48" cy="115" rx="26" ry="4" fill="currentColor" opacity="0.12" />
+  <!-- tank -->
+  <rect x="20" y="6" width="56" height="40" rx="5" fill={`url(#${id}g)`} />
+  <rect x="17" y="3" width="62" height="7" rx="3" fill={`url(#${id}g)`} />
+  <rect x="64" y="14" width="8" height="3" rx="1.5" fill="#d9c49a" />
+  <!-- open lid leaning on tank -->
+  <ellipse cx="48" cy="40" rx="27" ry="11" fill={`url(#${id}g)`} stroke="#3a2b18" stroke-width="0.8" />
+  <!-- bowl -->
+  <path d="M14 58 Q14 92 40 96 L56 96 Q82 92 82 58 Z" fill={`url(#${id}g)`} />
+  <ellipse cx="48" cy="58" rx="34" ry="10" fill={`url(#${id}g)`} stroke="#3a2b18" stroke-width="0.8" />
+  <ellipse cx="48" cy="58" rx="25" ry="6.5" fill={`url(#${id}w)`} />
+  <!-- pedestal -->
+  <path d="M36 95 L60 95 L64 112 L32 112 Z" fill={`url(#${id}g)`} />
+</svg>

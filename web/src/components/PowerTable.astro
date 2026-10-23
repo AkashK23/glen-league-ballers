@@ -1,0 +1,69 @@
+---
+import { type PowerRow, record, slug, url } from "../lib/data";
+
+interface Props {
+  rows: PowerRow[];
+  limit?: number;
+}
+const { rows, limit } = Astro.props;
+const shown = limit ? rows.slice(0, limit) : rows;
+const max = Math.max(...rows.map((r) => r.power));
+const min = Math.min(...rows.map((r) => r.power));
+// Scale across the field so the gaps between teams are visible.
+const width = (p: number) => (max === min ? 100 : 15 + (85 * (p - min)) / (max - min)).toFixed(1);
+---
+
+<div class="table-wrap">
+  <table class="power">
+    <thead>
+      <tr><th class="num">#</th><th></th><th>Owner</th><th class="team-col">Team</th><th class="num">Record</th><th>Power</th></tr>
+    </thead>
+    <tbody class="stagger">
+      {
+        shown.map((r) => {
+          const move = r.prev_rank == null ? 0 : r.prev_rank - r.rank;
+          return (
+            <tr>
+              <td class="num rank">{r.rank}</td>
+              <td class:list={["move", { up: move > 0, down: move < 0 }]} title={r.prev_rank ? `Last week: ${r.prev_rank}` : ""}>
+                {move > 0 ? `▲${move}` : move < 0 ? `▼${-move}` : "–"}
+              </td>
+              <td><a href={url(`/owners/${slug(r.owner)}`)}>{r.owner}</a></td>
+              <td class="team team-col muted">{r.team_name}</td>
+              <td class="num">{record(r.wins, r.losses)}</td>
+              <td class="bar-cell">
+                <span class="track"><span class="bar" style={`--w:${width(r.power)}%`} /></span>
+                <span class="pv">{r.power.toFixed(1)}</span>
+              </td>
+            </tr>
+          );
+        })
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .rank { width: 2.5em; font-weight: 700; }
+  .move { width: 3.2em; font-size: 0.72rem; font-weight: 700; color: var(--muted); white-space: nowrap; }
+  .move.up { color: var(--win); }
+  .move.down { color: var(--loss); }
+  .team { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-cell { min-width: 140px; white-space: nowrap; }
+  .track { display: inline-block; vertical-align: middle; width: calc(100% - 3.2em); min-width: 56px; }
+  .bar {
+    display: block;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #fff));
+    width: 0;
+    transition: width 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s;
+  }
+  :global(.in) .bar, :global(html:not(.js)) .bar { width: var(--w); }
+  .pv { margin-left: 6px; font-size: 0.7rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  @media (max-width: 560px) {
+    .team-col, .pv { display: none; }
+    .bar-cell { min-width: 0; }
+    .track { width: 64px; min-width: 64px; }
+  }
+</style>

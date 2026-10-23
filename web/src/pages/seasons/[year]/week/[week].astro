@@ -1,0 +1,158 @@
+---
+import Base from "../../../../layouts/Base.astro";
+import { type LineupRow, type SeasonData, boxScores, playoffRoundName, pts, seasons, slug, url, weekUrl } from "../../../../lib/data";
+
+export function getStaticPaths() {
+  return seasons.flatMap((s) => {
+    const weeks = [...new Set(s.matchups.filter((m) => m.completed).map((m) => m.week))].sort((a, b) => a - b);
+    return weeks.map((week, i) => ({
+      params: { year: String(s.year), week: String(week) },
+      props: { season: s, week, prev: weeks[i - 1], next: weeks[i + 1] },
+    }));
+  });
+}
+
+const { season: s, week, prev, next } = Astro.props as { season: SeasonData; week: number; prev?: number; next?: number };
+const boxes = boxScores(s.year);
+const kindOrder = { playoff: 0, regular: 1, consolation: 2 } as const;
+const games = s.matchups
+  .filter((m) => m.week === week && m.away)
+  .sort((a, b) => kindOrder[a.kind] - kindOrder[b.kind]);
+const playoffWeeks = [...new Set(s.matchups.filter((m) => m.kind === "playoff").map((m) => m.week))].sort((a, b) => a - b);
+const isPlayoffWeek = games.some((m) => m.kind === "playoff");
+const title = isPlayoffWeek ? `${s.year} ${playoffRoundName(week, playoffWeeks)}` : `${s.year} · Week ${week}`;
+
+const starters = (l: LineupRow[]) => l.filter((p) => p.slot !== "BE" && p.slot !== "IR");
+const bench = (l: LineupRow[]) => l.filter((p) => p.slot === "BE" || p.slot === "IR");
+const pairs = (a: LineupRow[], b: LineupRow[]) =>
+  Array.from({ length: Math.max(a.length, b.length) }, (_, i) => [a[i], b[i]] as const);
+const slotLabel = (slot: string) => ({ "RB/WR/TE": "FLEX", "WR/TE": "W/T", "D/ST": "DST" })[slot] ?? slot;
+const sum = (l: LineupRow[]) => l.reduce((t, p) => t + p.pts, 0);
+---
+
+<Base title={title} heroTitle={title} heroKicker={s.league_name} hero="season">
+  <div class="week-nav small">
+    {prev ? <a href={weekUrl(s.year, prev)}>← Week {prev}</a> : <span />}
+    <a href={url(`/seasons/${s.year}`)}>{s.year} season</a>
+    {next ? <a href={weekUrl(s.year, next)}>Week {next} →</a> : <span />}
+  </div>
+
+  {!s.has_box_scores && <p class="card center muted">The platform doesn't have player box scores for {s.year}, only final scores.</p>}
+
+  {
+    games.map((m) => {
+      const weeksOfBox = boxes[m.id] ?? [];
+      const homeWon = m.home.score > m.away!.score;
+      return (
+        <article class="box card" id={`m-${m.id}`}>
+          <div class="kind">
+            {m.kind === "playoff" ? <span class="pill gold">{playoffRoundName(week, playoffWeeks)}</span> : m.kind === "consolation" ? <span class="pill">Consolation</span> : null}
+            {m.weeks > 1 && <span class="pill">{m.weeks}-week matchup</span>}
+          </div>
+          <header class="score">
+            <div class:list={["team", { won: homeWon }]}>
+              <a class="owner" href={url(`/owners/${slug(m.home.owner)}`)}>{m.home.owner}</a>
+              <span class="tname">{m.home.team_name}</span>
+            </div>
+            <div class="nums">
+              <span class:list={{ won: homeWon }} data-count={m.home.score} data-decimals="2">{pts(m.home.score)}</span>
+              <span class="dash">–</span>
+              <span class:list={{ won: !homeWon }} data-count={m.away!.score} data-decimals="2">{pts(m.away!.score)}</span>
+            </div>
+            <div class:list={["team", "right", { won: !homeWon }]}>
+              <a class="owner" href={url(`/owners/${slug(m.away!.owner)}`)}>{m.away!.owner}</a>
+              <span class="tname">{m.away!.team_name}</span>
+            </div>
+          </header>
+
+          {weeksOfBox.map((b) => {
+            const hs = starters(b.home), as = starters(b.away);
+            const best = Math.max(...[...hs, ...as].map((p) => p.pts));
+            return (
+              <div class="lineups">
+                {m.weeks > 1 && <h3>NFL week {b.nfl_week} · {pts(sum(hs))} – {pts(sum(as))}</h3>}
+                <div class="table-wrap">
+                  <table>
+                    <tbody>
+                      {pairs(hs, as).map(([h, a]) => (
+                        <tr>
+                          <td class="player">
+                            {h && <><span class:list={["pname", { mvp: h.pts === best }]}>{h.player}</span><span class="meta">{h.team} {h.pos}</span></>}
+                          </td>
+                          <td class="num pts">{h && <>{pts(h.pts)}{h.proj != null && <span class="proj">{pts(h.proj)}</span>}</>}</td>
+                          <td class="slot">{slotLabel(h?.slot ?? a?.slot ?? "")}</td>
+                          <td class="num pts left">{a && <>{pts(a.pts)}{a.proj != null && <span class="proj">{pts(a.proj)}</span>}</>}</td>
+                          <td class="player right">
+                            {a && <><span class:list={["pname", { mvp: a.pts === best }]}>{a.player}</span><span class="meta">{a.team} {a.pos}</span></>}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <details class="bench">
+                    <summary>Bench</summary>
+                    <table>
+                      <tbody>
+                        {pairs(bench(b.home), bench(b.away)).map(([h, a]) => (
+                          <tr>
+                            <td class="player">{h && <><span class="pname">{h.player}</span><span class="meta">{h.team} {h.pos}</span></>}</td>
+                            <td class="num pts">{h && pts(h.pts)}</td>
+                            <td class="slot">{(h?.slot === "IR" || a?.slot === "IR") ? "IR" : "BE"}</td>
+                            <td class="num pts left">{a && pts(a.pts)}</td>
+                            <td class="player right">{a && <><span class="pname">{a.player}</span><span class="meta">{a.team} {a.pos}</span></>}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <p class="muted small center">
+                      Bench points: {pts(sum(bench(b.home)))} – {pts(sum(bench(b.away)))}
+                    </p>
+                  </details>
+                </div>
+              </div>
+            );
+          })}
+        </article>
+      );
+    })
+  }
+</Base>
+
+<style>
+  .week-nav { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: 600; }
+  .box { margin-bottom: 22px; padding: 18px 18px 10px; scroll-margin-top: 90px; }
+  .box:target { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .kind { display: flex; gap: 6px; justify-content: center; min-height: 4px; margin-bottom: 6px; }
+  .score { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .team { display: flex; flex-direction: column; min-width: 0; }
+  .team.right { text-align: right; }
+  .owner { font-weight: 700; font-size: 1.15rem; color: var(--heading); text-transform: uppercase; }
+  .tname { font-size: 0.78rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nums { font-size: clamp(1.3rem, 4vw, 2rem); font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--muted); }
+  .nums .won { color: var(--win); }
+  .dash { margin: 0 6px; font-weight: 300; }
+  .team.won .owner::after { content: " ✓"; color: var(--win); font-size: 0.8em; }
+  .lineups h3 { margin: 10px 0 4px; text-align: center; }
+  table { font-size: 0.84rem; }
+  td { padding: 6px 6px; }
+  .player { width: 40%; }
+  .player.right { text-align: right; }
+  .pname { display: block; font-weight: 600; color: var(--heading); line-height: 1.25; }
+  .pname.mvp::before { content: "★ "; color: var(--gold); }
+  .meta { font-size: 0.7rem; color: var(--muted); }
+  .pts { width: 8%; font-weight: 600; }
+  .pts.left { text-align: left; }
+  .proj { display: block; font-size: 0.68rem; color: var(--muted); font-weight: 400; }
+  .slot { width: 4em; text-align: center; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; color: var(--muted); background: var(--surface-2); }
+  .bench { margin: 4px 0 6px; }
+  .bench summary { text-align: center; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.72rem; font-weight: 700; }
+  @media (max-width: 560px) {
+    .meta { display: none; }
+    .owner { font-size: 0.95rem; }
+    .score { grid-template-columns: 1fr 1fr; grid-template-areas: "home away" "nums nums"; row-gap: 4px; }
+    .score > .team:first-child { grid-area: home; }
+    .score > .team.right { grid-area: away; }
+    .nums { grid-area: nums; text-align: center; }
+    .player { width: 36%; }
+  }
+</style>

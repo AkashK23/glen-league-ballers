@@ -34,11 +34,9 @@ const cols = [
 ];
 ---
 
-<Base title="Statistics">
-  <h1>Statistics</h1>
-  <p class="muted">Career totals across completed seasons. Click a column to sort.</p>
-
-  <h2>All-time standings</h2>
+<Base title="Statistics" heroTitle="Statistics" heroSub="Career totals across completed seasons" hero="stats">
+  <h2 class="section-title">All-Time Standings</h2>
+  <p class="muted small center">Click a column to sort.</p>
   <div class="card table-wrap">
     <table id="career">
       <thead>
@@ -67,8 +65,8 @@ const cols = [
     </table>
   </div>
 
-  <h2>Final finish by season</h2>
-  <p class="muted small">Gold = champion, red = last place.</p>
+  <h2 class="section-title">Final Finish by Season</h2>
+  <p class="muted small center">Gold = champion, red = last place.</p>
   <div class="card table-wrap">
     <table class="finishes">
       <thead>
@@ -118,6 +116,6 @@ const cols = [
 <style>
   .finishes td, .finishes th { text-align: center; padding: 6px 8px; }
   .finishes td:first-child, .finishes th:first-child { text-align: left; }
-  .gold { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+  .gold { background: var(--gold-soft); color: var(--gold); font-weight: 700; }
   .last { background: color-mix(in srgb, var(--loss) 18%, transparent); color: var(--loss); font-weight: 600; }
 </style>

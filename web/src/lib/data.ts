@@ -26,6 +26,7 @@ export interface Side {
 }
 
 export interface MatchupRow {
+  id: string;
   week: number;
   weeks: number;
   kind: "regular" | "playoff" | "consolation";
@@ -43,6 +44,31 @@ export interface PickRow {
   keeper: boolean;
 }
 
+export interface PowerRow {
+  rank: number;
+  prev_rank: number | null;
+  power: number;
+  wins: number;
+  losses: number;
+  owner: string;
+  team_name: string;
+}
+
+export interface LineupRow {
+  player: string;
+  pos: string;
+  slot: string;
+  pts: number;
+  proj: number | null;
+  team: string | null;
+}
+
+export interface BoxWeek {
+  nfl_week: number;
+  home: LineupRow[];
+  away: LineupRow[];
+}
+
 export interface SeasonData {
   year: number;
   league_name: string;
@@ -53,6 +79,8 @@ export interface SeasonData {
   regular_season_weeks: number;
   playoff_team_count: number;
   standings: TeamRow[];
+  power_rankings: { week: number; rankings: PowerRow[] }[];
+  has_box_scores: boolean;
   matchups: MatchupRow[];
   draft: PickRow[];
 }
@@ -81,6 +109,9 @@ export interface H2HRow {
 export const league = leagueJson as {
   name: string;
   tagline: string;
+  short_name: string;
+  wordmark: string;
+  hero_title: string;
   first_year: number;
   latest_year: number;
   owners: string[];
@@ -132,6 +163,27 @@ export function versus(owner: string, opponent: string) {
 export function playoffRoundName(week: number, playoffWeeks: number[]) {
   const fromEnd = playoffWeeks.length - 1 - playoffWeeks.indexOf(week);
   return ["Championship", "Semifinals", "Quarterfinals", "Wild Card"][fromEnd] ?? `Round ${week}`;
+}
+
+// Player-level box scores, one file per season (only seasons the platform has them for)
+const boxFiles = import.meta.glob<{ default: Record<string, BoxWeek[]> }>("../data/boxscores/*.json", { eager: true });
+export function boxScores(year: number): Record<string, BoxWeek[]> {
+  return boxFiles[`../data/boxscores/${year}.json`]?.default ?? {};
+}
+
+export const weekUrl = (year: number, week: number, matchupId?: string) =>
+  url(`/seasons/${year}/week/${week}${matchupId ? `#m-${matchupId}` : ""}`);
+
+// Optional hand-written power rankings: web/src/content/power-rankings/<year>/<label>.md
+const writtenRankings = import.meta.glob<{ frontmatter: Record<string, any>; Content: any }>(
+  "../content/power-rankings/*/*.md",
+  { eager: true },
+);
+export function writtenPowerRankings(year: number) {
+  return Object.entries(writtenRankings)
+    .filter(([p]) => p.includes(`/power-rankings/${year}/`))
+    .map(([p, mod]) => ({ label: mod.frontmatter.title ?? p.split("/").pop()!.replace(".md", ""), order: mod.frontmatter.order ?? 0, ...mod }))
+    .sort((a, b) => a.order - b.order);
 }
 
 // Optional hand-written season notes: web/src/content/seasons/<year>.md

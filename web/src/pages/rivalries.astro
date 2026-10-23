@@ -25,9 +25,7 @@ function cellStyle(w: number, l: number) {
 const lead = (a: number, b: number) => (a > b ? "lead" : a < b ? "trail" : "");
 ---
 
-<Base title="Rivalries">
-  <h1>Rivalries</h1>
-  <p class="muted">Head-to-head in the regular season and championship bracket.</p>
+<Base title="Rivalries" heroTitle="Rivalries" heroSub="Rivalries make the world go round" hero="rivalries">
 
   {
     [
@@ -37,7 +35,7 @@ const lead = (a: number, b: number) => (a > b ? "lead" : a < b ? "trail" : "");
       (group) =>
         group.list.length > 0 && (
           <section>
-            <h2>{group.title}</h2>
+            <h2 class="section-title">{group.title}</h2>
             <div class="grid grid-2">
               {group.list.map((r) => (
                 <div class="card rivalry">
@@ -72,8 +70,8 @@ const lead = (a: number, b: number) => (a > b ? "lead" : a < b ? "trail" : "");
     )
   }
 
-  <h2>Head-to-head grid</h2>
-  <p class="muted small">Read across: the row owner's record against each column owner.</p>
+  <h2 class="section-title">Head-to-Head Grid</h2>
+  <p class="muted small center">Head-to-head in the regular season and championship bracket. Read across: the row owner's record against each column owner.</p>
   <div class="card table-wrap matrix-wrap">
     <table class="matrix">
       <thead>
@@ -111,9 +109,8 @@ const lead = (a: number, b: number) => (a > b ? "lead" : a < b ? "trail" : "");
 <style>
   .rivalry { text-align: center; }
   .names {
-    font-family: var(--font-display);
-    font-size: 1.6rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 700;
     text-transform: uppercase;
     display: flex;
     justify-content: center;

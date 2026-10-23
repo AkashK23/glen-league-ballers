@@ -6,8 +6,10 @@ browser session (DevTools > Application > Cookies > espn.com).
 
 from __future__ import annotations
 
-from ..models import DraftPick, Matchup, MatchupKind, Owner, Season, TeamSeason
+from ..models import BoxScore, DraftPick, LineupEntry, Matchup, MatchupKind, Owner, Season, TeamSeason
 from .base import LeagueProvider
+
+BOX_SCORES_FROM = 2019  # ESPN has no player-level box scores before this
 
 _KIND_BY_TIER = {
     "NONE": MatchupKind.REGULAR,
@@ -79,6 +81,9 @@ class EspnProvider(LeagueProvider):
                     )
                 )
 
+        if year >= BOX_SCORES_FROM:
+            self._attach_box_scores(league, matchups)
+
         draft = [
             DraftPick(
                 round=p.round_num,
@@ -103,3 +108,47 @@ class EspnProvider(LeagueProvider):
             draft=draft,
             provider=self.name,
         )
+
+    def _attach_box_scores(self, league, matchups: list[Matchup]) -> None:
+        """Add per-NFL-week lineups to each matchup. Missing weeks are skipped."""
+        by_key = {(m.week, m.home_team_id, m.away_team_id): m for m in matchups}
+        period_of = {
+            nfl_week: int(period)
+            for period, nfl_weeks in league.settings.matchup_periods.items()
+            for nfl_week in nfl_weeks
+        }
+        cache: dict = {}
+        last_week = max((nfl_week for nfl_week in period_of if nfl_week <= league.current_week), default=0)
+        for nfl_week in range(1, last_week + 1):
+            try:
+                boxes = league.box_scores(nfl_week, player_team_cache=cache)
+            except Exception as e:  # noqa: BLE001
+                print(f"    box scores {league.year} wk {nfl_week}: skipped ({e})")
+                continue
+            for b in boxes:
+                home_id = getattr(b.home_team, "team_id", None)
+                away_id = getattr(b.away_team, "team_id", None)
+                if home_id is None:
+                    continue
+                key = (period_of.get(nfl_week), str(home_id), str(away_id) if away_id is not None else None)
+                m = by_key.get(key)
+                if m is None:
+                    continue
+                m.box_scores.append(
+                    BoxScore(
+                        nfl_week=nfl_week,
+                        home_lineup=[_lineup_entry(p) for p in b.home_lineup],
+                        away_lineup=[_lineup_entry(p) for p in b.away_lineup] if away_id is not None else [],
+                    )
+                )
+
+
+def _lineup_entry(p) -> LineupEntry:
+    return LineupEntry(
+        player_name=p.name,
+        position=p.position,
+        slot=p.slot_position,
+        points=round(p.points or 0, 2),
+        projected_points=round(p.projected_points, 2) if p.projected_points else None,
+        pro_team=p.proTeam or None,
+    )

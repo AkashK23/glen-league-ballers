@@ -8,6 +8,9 @@ first_year = 2014
 [site]
 name = "Glen League Ballers"
 tagline = "May God help us all"
+short_name = "GLB"
+wordmark = "Glen League Archives"
+hero_title = "Welcome to the GLB Archives"
 
 # Canonical owners. Stats are keyed by person, not team name. `ids` lists every
 # platform account id that belongs to this person (ESPN member ids look like
