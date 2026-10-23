@@ -75,6 +75,7 @@ class EspnProvider(LeagueProvider):
                         home_score=round(m.home_score, 2),
                         away_score=round(m.away_score, 2) if away is not None else 0.0,
                         kind=_KIND_BY_TIER.get(m.matchup_type, MatchupKind.CONSOLATION),
+                        weeks=len(settings.matchup_periods.get(str(period), [period])),
                     )
                 )
 

@@ -35,19 +35,19 @@ def head_to_head(h: LeagueHistory, through_year: int | None = None) -> dict[tupl
     return dict(table)
 
 
-def championships(h: LeagueHistory) -> dict[str, int]:
+def championships(h: LeagueHistory, through_year: int | None = None) -> dict[str, int]:
     out: dict[str, int] = defaultdict(int)
-    for _, t, o in h.iter_team_seasons():
-        if t.final_rank == 1:
+    for s, t, o in h.iter_team_seasons():
+        if t.final_rank == 1 and (through_year is None or s.year <= through_year):
             out[o.key] += 1
     return dict(out)
 
 
 def rivalry_report(h: LeagueHistory, rivalries: list[dict]) -> list[dict]:
     """Featured rivalries from config, e.g. {owners = ["brian", "girish"], frozen_after = 2016}."""
-    titles = championships(h)
     report = []
     for r in rivalries:
+        titles = championships(h, through_year=r.get("frozen_after"))
         x, y = r["owners"]
         a, b = sorted((x, y))
         stats = head_to_head(h, through_year=r.get("frozen_after")).get((a, b))

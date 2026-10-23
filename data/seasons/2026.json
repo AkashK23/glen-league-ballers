@@ -1,0 +1,2547 @@
+{
+  "year": 2026,
+  "league_name": "Glen League Ballers",
+  "regular_season_weeks": 14,
+  "playoff_team_count": 6,
+  "owners": [
+    {
+      "id": "{C55F00AC-DBA2-4FF3-9F00-ACDBA2AFF378}",
+      "name": "Akash Krishna"
+    },
+    {
+      "id": "{AA64723D-228B-4C48-A472-3D228B5C48DC}",
+      "name": "Adit Acharya"
+    },
+    {
+      "id": "{235B4E67-83FD-4C73-9B4E-6783FD7C733F}",
+      "name": "Girish Ganesh"
+    },
+    {
+      "id": "{0FB416A7-2F19-4289-B416-A72F19A289DE}",
+      "name": "Sid Moorthy"
+    },
+    {
+      "id": "{BC264024-6074-48D4-A640-246074C8D4C7}",
+      "name": "Arjun Keshava"
+    },
+    {
+      "id": "{85E71877-5755-4D93-A718-775755ED93D7}",
+      "name": "Ashwin  Inala"
+    },
+    {
+      "id": "{9C3284C5-C338-451D-B284-C5C338A51D01}",
+      "name": "Brian Wu"
+    },
+    {
+      "id": "{F3E158CF-5540-40D7-A158-CF554060D7C8}",
+      "name": "Ruda Nighot"
+    },
+    {
+      "id": "{5DB5F0E2-3DAE-4466-B5F0-E23DAE5466D9}",
+      "name": "Will Furth"
+    },
+    {
+      "id": "{C386640A-30D8-48A8-8664-0A30D818A8BB}",
+      "name": "Anish Kottu"
+    },
+    {
+      "id": "{5756F192-0CDE-4A39-96F1-920CDEFA3988}",
+      "name": "Sujay Kestur"
+    },
+    {
+      "id": "{3047998B-EC5C-4E62-8799-8BEC5C5E6286}",
+      "name": "Mayur Krishna"
+    }
+  ],
+  "teams": [
+    {
+      "team_id": "1",
+      "owner_ids": [
+        "{C55F00AC-DBA2-4FF3-9F00-ACDBA2AFF378}"
+      ],
+      "name": "keon",
+      "wins": 4,
+      "losses": 2,
+      "ties": 0,
+      "points_for": 769.45,
+      "points_against": 691.47,
+      "seed": 1,
+      "final_rank": null,
+      "division": "Hullaboo",
+      "logo_url": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/e7510500-c996-11f1-a617-f9c982b8970e"
+    },
+    {
+      "team_id": "2",
+      "owner_ids": [
+        "{AA64723D-228B-4C48-A472-3D228B5C48DC}"
+      ],
+      "name": "Love Wins",
+      "wins": 1,
+      "losses": 5,
+      "ties": 0,
+      "points_for": 727.5,
+      "points_against": 759.93,
+      "seed": 11,
+      "final_rank": null,
+      "division": "Ragamuffin",
+      "logo_url": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/81c08260-ac59-11f1-8623-4f919cfbc4d9"
+    },
+    {
+      "team_id": "3",
+      "owner_ids": [
+        "{235B4E67-83FD-4C73-9B4E-6783FD7C733F}"
+      ],
+      "name": "Herbs, Dijon, and OLAVE Oil",
+      "wins": 4,
+      "losses": 2,
+      "ties": 0,
+      "points_for": 732.33,
+      "points_against": 765.0,
+      "seed": 3,
+      "final_rank": null,
+      "division": "Bumfuzzle",
+      "logo_url": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/bf780dd0-a867-11f1-a12f-2b44c2a1875d"
+    },
+    {
+      "team_id": "4",
+      "owner_ids": [
+        "{0FB416A7-2F19-4289-B416-A72F19A289DE}"
+      ],
+      "name": "Josh Gibbs me a Woody",
+      "wins": 4,
+      "losses": 2,
+      "ties": 0,
+      "points_for": 728.34,
+      "points_against": 637.17,
+      "seed": 4,
+      "final_rank": null,
+      "division": "Ragamuffin",
+      "logo_url": "https://g.espncdn.com/lm-static/logo-packs/ffl/1stStringAllStars-SportsManias-QB/jones-01.svg"
+    },
+    {
+      "team_id": "5",
+      "owner_ids": [
+        "{BC264024-6074-48D4-A640-246074C8D4C7}"
+      ],
+      "name": "DO NOT REDEEM IT",
+      "wins": 4,
+      "losses": 2,
+      "ties": 0,
+      "points_for": 660.37,
+      "points_against": 676.67,
+      "seed": 5,
+      "final_rank": null,
+      "division": "Ragamuffin",
+      "logo_url": "https://g.espncdn.com/lm-static/logo-packs/core/BobsBurgers/Tina_Mad.svg"
+    },
+    {
+      "team_id": "6",
+      "owner_ids": [
+        "{85E71877-5755-4D93-A718-775755ED93D7}"
+      ],
+      "name": "Smoking the Wupack",
+      "wins": 3,
+      "losses": 3,
+      "ties": 0,
+      "points_for": 696.48,
+      "points_against": 668.86,
+      "seed": 8,
+      "final_rank": null,
+      "division": "Bumfuzzle",
+      "logo_url": "https://i.pinimg.com/originals/f7/d0/42/f7d04218e0abd7f7bf0e6956924c7fd5.jpg"
+    },
+    {
+      "team_id": "7",
+      "owner_ids": [
+        "{9C3284C5-C338-451D-B284-C5C338A51D01}"
+      ],
+      "name": "\ud83e\uddca THE BRYCEMAN \ud83e\uddca",
+      "wins": 3,
+      "losses": 3,
+      "ties": 0,
+      "points_for": 731.32,
+      "points_against": 757.94,
+      "seed": 7,
+      "final_rank": null,
+      "division": "Bumfuzzle",
+      "logo_url": "https://g.espncdn.com/lm-static/logo-packs/core/Incredibles/incredibles_15.svg"
+    },
+    {
+      "team_id": "8",
+      "owner_ids": [
+        "{F3E158CF-5540-40D7-A158-CF554060D7C8}"
+      ],
+      "name": "Wilson",
+      "wins": 4,
+      "losses": 2,
+      "ties": 0,
+      "points_for": 763.37,
+      "points_against": 660.43,
+      "seed": 2,
+      "final_rank": null,
+      "division": "Ragamuffin",
+      "logo_url": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/05162530-af83-11f1-ba79-c5175d47c89d"
+    },
+    {
+      "team_id": "9",
+      "owner_ids": [
+        "{5DB5F0E2-3DAE-4466-B5F0-E23DAE5466D9}"
+      ],
+      "name": "Pooped Skatt in UR LaPortaPotty",
+      "wins": 2,
+      "losses": 4,
+      "ties": 0,
+      "points_for": 734.03,
+      "points_against": 771.53,
+      "seed": 10,
+      "final_rank": null,
+      "division": "Hullaboo",
+      "logo_url": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/3e7e8cf0-8869-11f0-89de-d1ac062a5dc6"
+    },
+    {
+      "team_id": "10",
+      "owner_ids": [
+        "{C386640A-30D8-48A8-8664-0A30D818A8BB}"
+      ],
+      "name": "Timy xD flys jj into bowers 4 $",
+      "wins": 3,
+      "losses": 3,
+      "ties": 0,
+      "points_for": 678.55,
+      "points_against": 753.07,
+      "seed": 9,
+      "final_rank": null,
+      "division": "Hullaboo",
+      "logo_url": "https://g.espncdn.com/lm-static/logo-packs/ffl/1stStringAllStars-SportsManias/jefferson-01.svg"
+    },
+    {
+      "team_id": "11",
+      "owner_ids": [
+        "{5756F192-0CDE-4A39-96F1-920CDEFA3988}"
+      ],
+      "name": "4D Chess",
+      "wins": 3,
+      "losses": 3,
+      "ties": 0,
+      "points_for": 762.83,
+      "points_against": 743.3,
+      "seed": 6,
+      "final_rank": null,
+      "division": "Hullaboo",
+      "logo_url": "https://g.espncdn.com/lm-static/logo-packs/ffl/ShieldsOfGlory-LDopa/ShieldsOfGlory-04.svg"
+    },
+    {
+      "team_id": "12",
+      "owner_ids": [
+        "{3047998B-EC5C-4E62-8799-8BEC5C5E6286}"
+      ],
+      "name": "Scammed by Sid",
+      "wins": 1,
+      "losses": 5,
+      "ties": 0,
+      "points_for": 592.66,
+      "points_against": 691.86,
+      "seed": 12,
+      "final_rank": null,
+      "division": "Bumfuzzle",
+      "logo_url": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/5089b020-a8af-11f1-8b95-b1e59b7020ef"
+    }
+  ],
+  "matchups": [
+    {
+      "week": 1,
+      "home_team_id": "12",
+      "away_team_id": "6",
+      "home_score": 88.65,
+      "away_score": 118.16,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 1,
+      "home_team_id": "3",
+      "away_team_id": "7",
+      "home_score": 171.56,
+      "away_score": 158.61,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 1,
+      "home_team_id": "2",
+      "away_team_id": "5",
+      "home_score": 120.96,
+      "away_score": 126.72,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 1,
+      "home_team_id": "4",
+      "away_team_id": "8",
+      "home_score": 132.01,
+      "away_score": 123.66,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 1,
+      "home_team_id": "1",
+      "away_team_id": "9",
+      "home_score": 139.2,
+      "away_score": 111.09,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 1,
+      "home_team_id": "10",
+      "away_team_id": "11",
+      "home_score": 139.85,
+      "away_score": 107.77,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 2,
+      "home_team_id": "6",
+      "away_team_id": "7",
+      "home_score": 113.15,
+      "away_score": 130.02,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 2,
+      "home_team_id": "3",
+      "away_team_id": "12",
+      "home_score": 98.38,
+      "away_score": 98.16,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 2,
+      "home_team_id": "5",
+      "away_team_id": "8",
+      "home_score": 72.86,
+      "away_score": 116.94,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 2,
+      "home_team_id": "4",
+      "away_team_id": "2",
+      "home_score": 131.97,
+      "away_score": 122.73,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 2,
+      "home_team_id": "9",
+      "away_team_id": "11",
+      "home_score": 125.23,
+      "away_score": 168.48,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 2,
+      "home_team_id": "10",
+      "away_team_id": "1",
+      "home_score": 87.76,
+      "away_score": 132.75,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 3,
+      "home_team_id": "3",
+      "away_team_id": "6",
+      "home_score": 116.99,
+      "away_score": 108.24,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 3,
+      "home_team_id": "7",
+      "away_team_id": "12",
+      "home_score": 110.14,
+      "away_score": 108.34,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 3,
+      "home_team_id": "4",
+      "away_team_id": "5",
+      "home_score": 142.41,
+      "away_score": 86.37,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 3,
+      "home_team_id": "8",
+      "away_team_id": "2",
+      "home_score": 146.24,
+      "away_score": 131.33,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 3,
+      "home_team_id": "10",
+      "away_team_id": "9",
+      "home_score": 108.48,
+      "away_score": 145.93,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 3,
+      "home_team_id": "11",
+      "away_team_id": "1",
+      "home_score": 121.25,
+      "away_score": 126.41,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 4,
+      "home_team_id": "6",
+      "away_team_id": "9",
+      "home_score": 104.53,
+      "away_score": 128.93,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 4,
+      "home_team_id": "7",
+      "away_team_id": "5",
+      "home_score": 98.06,
+      "away_score": 142.02,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 4,
+      "home_team_id": "2",
+      "away_team_id": "3",
+      "home_score": 165.57,
+      "away_score": 110.32,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 4,
+      "home_team_id": "8",
+      "away_team_id": "12",
+      "home_score": 138.15,
+      "away_score": 86.5,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 4,
+      "home_team_id": "11",
+      "away_team_id": "1",
+      "home_score": 134.38,
+      "away_score": 132.09,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 4,
+      "home_team_id": "10",
+      "away_team_id": "4",
+      "home_score": 103.93,
+      "away_score": 98.47,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 5,
+      "home_team_id": "8",
+      "away_team_id": "6",
+      "home_score": 115.88,
+      "away_score": 134.47,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 5,
+      "home_team_id": "10",
+      "away_team_id": "9",
+      "home_score": 147.64,
+      "away_score": 134.09,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 5,
+      "home_team_id": "2",
+      "away_team_id": "4",
+      "home_score": 83.65,
+      "away_score": 122.18,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 5,
+      "home_team_id": "7",
+      "away_team_id": "1",
+      "home_score": 146.1,
+      "away_score": 104.94,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 5,
+      "home_team_id": "3",
+      "away_team_id": "11",
+      "home_score": 118.25,
+      "away_score": 133.12,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 5,
+      "home_team_id": "5",
+      "away_team_id": "12",
+      "home_score": 129.2,
+      "away_score": 109.54,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 6,
+      "home_team_id": "6",
+      "away_team_id": "7",
+      "home_score": 117.93,
+      "away_score": 88.39,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 6,
+      "home_team_id": "4",
+      "away_team_id": "3",
+      "home_score": 101.3,
+      "away_score": 116.83,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 6,
+      "home_team_id": "11",
+      "away_team_id": "12",
+      "home_score": 97.83,
+      "away_score": 101.47,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 6,
+      "home_team_id": "2",
+      "away_team_id": "8",
+      "home_score": 103.26,
+      "away_score": 122.5,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 6,
+      "home_team_id": "9",
+      "away_team_id": "5",
+      "home_score": 88.76,
+      "away_score": 103.2,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 6,
+      "home_team_id": "10",
+      "away_team_id": "1",
+      "home_score": 90.89,
+      "away_score": 134.06,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 7,
+      "home_team_id": "9",
+      "away_team_id": "7",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 7,
+      "home_team_id": "12",
+      "away_team_id": "3",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 7,
+      "home_team_id": "1",
+      "away_team_id": "6",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 7,
+      "home_team_id": "5",
+      "away_team_id": "4",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 7,
+      "home_team_id": "11",
+      "away_team_id": "8",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 7,
+      "home_team_id": "10",
+      "away_team_id": "2",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 8,
+      "home_team_id": "12",
+      "away_team_id": "7",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 8,
+      "home_team_id": "9",
+      "away_team_id": "3",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 8,
+      "home_team_id": "11",
+      "away_team_id": "6",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 8,
+      "home_team_id": "8",
+      "away_team_id": "4",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 8,
+      "home_team_id": "1",
+      "away_team_id": "2",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 8,
+      "home_team_id": "10",
+      "away_team_id": "5",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 9,
+      "home_team_id": "11",
+      "away_team_id": "7",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 9,
+      "home_team_id": "1",
+      "away_team_id": "3",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 9,
+      "home_team_id": "10",
+      "away_team_id": "6",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 9,
+      "home_team_id": "2",
+      "away_team_id": "12",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 9,
+      "home_team_id": "9",
+      "away_team_id": "4",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 9,
+      "home_team_id": "5",
+      "away_team_id": "8",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 10,
+      "home_team_id": "8",
+      "away_team_id": "7",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 10,
+      "home_team_id": "6",
+      "away_team_id": "3",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 10,
+      "home_team_id": "10",
+      "away_team_id": "12",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 10,
+      "home_team_id": "1",
+      "away_team_id": "4",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 10,
+      "home_team_id": "9",
+      "away_team_id": "2",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 10,
+      "home_team_id": "11",
+      "away_team_id": "5",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 11,
+      "home_team_id": "3",
+      "away_team_id": "7",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 11,
+      "home_team_id": "2",
+      "away_team_id": "6",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 11,
+      "home_team_id": "4",
+      "away_team_id": "12",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 11,
+      "home_team_id": "10",
+      "away_team_id": "8",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 11,
+      "home_team_id": "1",
+      "away_team_id": "5",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 11,
+      "home_team_id": "11",
+      "away_team_id": "9",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 12,
+      "home_team_id": "4",
+      "away_team_id": "7",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 12,
+      "home_team_id": "8",
+      "away_team_id": "3",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 12,
+      "home_team_id": "12",
+      "away_team_id": "6",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 12,
+      "home_team_id": "5",
+      "away_team_id": "2",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 12,
+      "home_team_id": "9",
+      "away_team_id": "1",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 12,
+      "home_team_id": "11",
+      "away_team_id": "10",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 13,
+      "home_team_id": "2",
+      "away_team_id": "7",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 13,
+      "home_team_id": "10",
+      "away_team_id": "3",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 13,
+      "home_team_id": "5",
+      "away_team_id": "6",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 13,
+      "home_team_id": "9",
+      "away_team_id": "12",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 13,
+      "home_team_id": "11",
+      "away_team_id": "4",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 13,
+      "home_team_id": "1",
+      "away_team_id": "8",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 14,
+      "home_team_id": "10",
+      "away_team_id": "7",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 14,
+      "home_team_id": "5",
+      "away_team_id": "3",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 14,
+      "home_team_id": "4",
+      "away_team_id": "6",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 14,
+      "home_team_id": "1",
+      "away_team_id": "12",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 14,
+      "home_team_id": "9",
+      "away_team_id": "8",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    },
+    {
+      "week": 14,
+      "home_team_id": "11",
+      "away_team_id": "2",
+      "home_score": 0.0,
+      "away_score": 0.0,
+      "kind": "regular",
+      "weeks": 1
+    }
+  ],
+  "draft": [
+    {
+      "round": 1,
+      "pick": 1,
+      "team_id": "4",
+      "player_name": "Jahmyr Gibbs",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 1,
+      "pick": 2,
+      "team_id": "3",
+      "player_name": "Bijan Robinson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 1,
+      "pick": 3,
+      "team_id": "9",
+      "player_name": "Ja'Marr Chase",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 1,
+      "pick": 4,
+      "team_id": "5",
+      "player_name": "Puka Nacua",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 1,
+      "pick": 5,
+      "team_id": "2",
+      "player_name": "Jonathan Taylor",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 1,
+      "pick": 6,
+      "team_id": "1",
+      "player_name": "Jaxon Smith-Njigba",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 1,
+      "pick": 7,
+      "team_id": "7",
+      "player_name": "Amon-Ra St. Brown",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 1,
+      "pick": 8,
+      "team_id": "12",
+      "player_name": "Christian McCaffrey",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 1,
+      "pick": 9,
+      "team_id": "6",
+      "player_name": "James Cook III",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 1,
+      "pick": 10,
+      "team_id": "10",
+      "player_name": "Chase Brown",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 1,
+      "pick": 11,
+      "team_id": "8",
+      "player_name": "Saquon Barkley",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 1,
+      "pick": 12,
+      "team_id": "11",
+      "player_name": "CeeDee Lamb",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 2,
+      "pick": 1,
+      "team_id": "11",
+      "player_name": "De'Von Achane",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 2,
+      "pick": 2,
+      "team_id": "8",
+      "player_name": "Kenneth Walker III",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 2,
+      "pick": 3,
+      "team_id": "10",
+      "player_name": "Omarion Hampton",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 2,
+      "pick": 4,
+      "team_id": "6",
+      "player_name": "Justin Jefferson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 2,
+      "pick": 5,
+      "team_id": "12",
+      "player_name": "A.J. Brown",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 2,
+      "pick": 6,
+      "team_id": "7",
+      "player_name": "Ashton Jeanty",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 2,
+      "pick": 7,
+      "team_id": "1",
+      "player_name": "Nico Collins",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 2,
+      "pick": 8,
+      "team_id": "2",
+      "player_name": "Jeremiyah Love",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 2,
+      "pick": 9,
+      "team_id": "5",
+      "player_name": "Derrick Henry",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 2,
+      "pick": 10,
+      "team_id": "9",
+      "player_name": "Drake London",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 2,
+      "pick": 11,
+      "team_id": "3",
+      "player_name": "Chris Olave",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 2,
+      "pick": 12,
+      "team_id": "4",
+      "player_name": "Josh Allen",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 3,
+      "pick": 1,
+      "team_id": "4",
+      "player_name": "Rashee Rice",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 3,
+      "pick": 2,
+      "team_id": "3",
+      "player_name": "DeVonta Smith",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 3,
+      "pick": 3,
+      "team_id": "9",
+      "player_name": "Javonte Williams",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 3,
+      "pick": 4,
+      "team_id": "5",
+      "player_name": "Malik Nabers",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 3,
+      "pick": 5,
+      "team_id": "10",
+      "player_name": "Brock Bowers",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 3,
+      "pick": 6,
+      "team_id": "1",
+      "player_name": "Kyren Williams",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 3,
+      "pick": 7,
+      "team_id": "7",
+      "player_name": "Trey McBride",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 3,
+      "pick": 8,
+      "team_id": "12",
+      "player_name": "George Pickens",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 3,
+      "pick": 9,
+      "team_id": "6",
+      "player_name": "Zay Flowers",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 3,
+      "pick": 10,
+      "team_id": "2",
+      "player_name": "Tee Higgins",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 3,
+      "pick": 11,
+      "team_id": "8",
+      "player_name": "Garrett Wilson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 3,
+      "pick": 12,
+      "team_id": "11",
+      "player_name": "Davante Adams",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 4,
+      "pick": 1,
+      "team_id": "11",
+      "player_name": "D'Andre Swift",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 4,
+      "pick": 2,
+      "team_id": "8",
+      "player_name": "Tetairoa McMillan",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 4,
+      "pick": 3,
+      "team_id": "2",
+      "player_name": "Ladd McConkey",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 4,
+      "pick": 4,
+      "team_id": "6",
+      "player_name": "Colston Loveland",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 4,
+      "pick": 5,
+      "team_id": "12",
+      "player_name": "Travis Etienne Jr.",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 4,
+      "pick": 6,
+      "team_id": "7",
+      "player_name": "Breece Hall",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 4,
+      "pick": 7,
+      "team_id": "1",
+      "player_name": "Jaylen Waddle",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 4,
+      "pick": 8,
+      "team_id": "10",
+      "player_name": "Jadarian Price",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 4,
+      "pick": 9,
+      "team_id": "5",
+      "player_name": "Quinshon Judkins",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 4,
+      "pick": 10,
+      "team_id": "9",
+      "player_name": "Emeka Egbuka",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 4,
+      "pick": 11,
+      "team_id": "3",
+      "player_name": "David Montgomery",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 4,
+      "pick": 12,
+      "team_id": "4",
+      "player_name": "Bhayshul Tuten",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 5,
+      "pick": 1,
+      "team_id": "4",
+      "player_name": "Terry McLaurin",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 5,
+      "pick": 2,
+      "team_id": "3",
+      "player_name": "DJ Moore",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 5,
+      "pick": 3,
+      "team_id": "9",
+      "player_name": "Cam Skattebo",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 5,
+      "pick": 4,
+      "team_id": "5",
+      "player_name": "Jameson Williams",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 5,
+      "pick": 5,
+      "team_id": "10",
+      "player_name": "Christian Watson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 5,
+      "pick": 6,
+      "team_id": "1",
+      "player_name": "Bucky Irving",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 5,
+      "pick": 7,
+      "team_id": "7",
+      "player_name": "Tyler Warren",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 5,
+      "pick": 8,
+      "team_id": "12",
+      "player_name": "Rome Odunze",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 5,
+      "pick": 9,
+      "team_id": "6",
+      "player_name": "Lamar Jackson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 5,
+      "pick": 10,
+      "team_id": "2",
+      "player_name": "Joe Burrow",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 5,
+      "pick": 11,
+      "team_id": "8",
+      "player_name": "Luther Burden III",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 5,
+      "pick": 12,
+      "team_id": "11",
+      "player_name": "Drake Maye",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 6,
+      "pick": 1,
+      "team_id": "11",
+      "player_name": "Harold Fannin Jr.",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 6,
+      "pick": 2,
+      "team_id": "8",
+      "player_name": "Jayden Daniels",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 6,
+      "pick": 3,
+      "team_id": "10",
+      "player_name": "Parker Washington",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 6,
+      "pick": 4,
+      "team_id": "6",
+      "player_name": "TreVeyon Henderson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 6,
+      "pick": 5,
+      "team_id": "12",
+      "player_name": "RJ Harvey",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 6,
+      "pick": 6,
+      "team_id": "7",
+      "player_name": "MarShawn Lloyd",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 6,
+      "pick": 7,
+      "team_id": "1",
+      "player_name": "Michael Pittman Jr.",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 6,
+      "pick": 8,
+      "team_id": "2",
+      "player_name": "George Kittle",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 6,
+      "pick": 9,
+      "team_id": "5",
+      "player_name": "Jalen Hurts",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 6,
+      "pick": 10,
+      "team_id": "9",
+      "player_name": "Marvin Harrison Jr.",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 6,
+      "pick": 11,
+      "team_id": "3",
+      "player_name": "Rhamondre Stevenson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 6,
+      "pick": 12,
+      "team_id": "4",
+      "player_name": "Michael Wilson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 7,
+      "pick": 1,
+      "team_id": "4",
+      "player_name": "Jonathon Brooks",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 7,
+      "pick": 2,
+      "team_id": "3",
+      "player_name": "Justin Herbert",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 7,
+      "pick": 3,
+      "team_id": "9",
+      "player_name": "Blake Corum",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 7,
+      "pick": 4,
+      "team_id": "5",
+      "player_name": "Tony Pollard",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 7,
+      "pick": 5,
+      "team_id": "10",
+      "player_name": "Courtland Sutton",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 7,
+      "pick": 6,
+      "team_id": "1",
+      "player_name": "J.K. Dobbins",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 7,
+      "pick": 7,
+      "team_id": "7",
+      "player_name": "Caleb Williams",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 7,
+      "pick": 8,
+      "team_id": "12",
+      "player_name": "Quentin Johnston",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 7,
+      "pick": 9,
+      "team_id": "6",
+      "player_name": "Mike Evans",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 7,
+      "pick": 10,
+      "team_id": "2",
+      "player_name": "Carnell Tate",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 7,
+      "pick": 11,
+      "team_id": "8",
+      "player_name": "Brian Thomas Jr.",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 7,
+      "pick": 12,
+      "team_id": "11",
+      "player_name": "Jaylen Warren",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 8,
+      "pick": 1,
+      "team_id": "11",
+      "player_name": "Chris Godwin Jr.",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 8,
+      "pick": 2,
+      "team_id": "8",
+      "player_name": "Matthew Golden",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 8,
+      "pick": 3,
+      "team_id": "2",
+      "player_name": "Chuba Hubbard",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 8,
+      "pick": 4,
+      "team_id": "6",
+      "player_name": "Tucker Kraft",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 8,
+      "pick": 5,
+      "team_id": "12",
+      "player_name": "Rico Dowdle",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 8,
+      "pick": 6,
+      "team_id": "7",
+      "player_name": "Jordan Addison",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 8,
+      "pick": 7,
+      "team_id": "1",
+      "player_name": "Xavier Worthy",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 8,
+      "pick": 8,
+      "team_id": "10",
+      "player_name": "Trevor Lawrence",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 8,
+      "pick": 9,
+      "team_id": "5",
+      "player_name": "Kyle Pitts Sr.",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 8,
+      "pick": 10,
+      "team_id": "9",
+      "player_name": "Sam LaPorta",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 8,
+      "pick": 11,
+      "team_id": "3",
+      "player_name": "De'Zhaun Stribling",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 8,
+      "pick": 12,
+      "team_id": "4",
+      "player_name": "DK Metcalf",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 9,
+      "pick": 1,
+      "team_id": "4",
+      "player_name": "Kyle Monangai",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 9,
+      "pick": 2,
+      "team_id": "3",
+      "player_name": "Stefon Diggs",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 9,
+      "pick": 3,
+      "team_id": "9",
+      "player_name": "Jordan Mason",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 9,
+      "pick": 4,
+      "team_id": "5",
+      "player_name": "Jayden Reed",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 9,
+      "pick": 5,
+      "team_id": "10",
+      "player_name": "Wan'Dale Robinson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 9,
+      "pick": 6,
+      "team_id": "1",
+      "player_name": "Alec Pierce",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 9,
+      "pick": 7,
+      "team_id": "7",
+      "player_name": "Kenny Gainwell",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 9,
+      "pick": 8,
+      "team_id": "12",
+      "player_name": "Dak Prescott",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 9,
+      "pick": 9,
+      "team_id": "6",
+      "player_name": "Rachaad White",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 9,
+      "pick": 10,
+      "team_id": "2",
+      "player_name": "Jakobi Meyers",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 9,
+      "pick": 11,
+      "team_id": "8",
+      "player_name": "Josh Jacobs",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 9,
+      "pick": 12,
+      "team_id": "11",
+      "player_name": "Romeo Doubs",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 10,
+      "pick": 1,
+      "team_id": "11",
+      "player_name": "Khalil Shakir",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 10,
+      "pick": 2,
+      "team_id": "8",
+      "player_name": "Dalton Kincaid",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 10,
+      "pick": 3,
+      "team_id": "10",
+      "player_name": "KC Concepcion",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 10,
+      "pick": 4,
+      "team_id": "6",
+      "player_name": "Josh Downs",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 10,
+      "pick": 5,
+      "team_id": "12",
+      "player_name": "Dallas Goedert",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 10,
+      "pick": 6,
+      "team_id": "7",
+      "player_name": "Jalen McMillan",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 10,
+      "pick": 7,
+      "team_id": "1",
+      "player_name": "Jaxson Dart",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 10,
+      "pick": 8,
+      "team_id": "10",
+      "player_name": "Jonah Coleman",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 10,
+      "pick": 9,
+      "team_id": "5",
+      "player_name": "Jacory Croskey-Merritt",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 10,
+      "pick": 10,
+      "team_id": "9",
+      "player_name": "Makai Lemon",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 10,
+      "pick": 11,
+      "team_id": "3",
+      "player_name": "Isaiah Likely",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 10,
+      "pick": 12,
+      "team_id": "4",
+      "player_name": "Jake Ferguson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 11,
+      "pick": 1,
+      "team_id": "4",
+      "player_name": "Woody Marks",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 11,
+      "pick": 2,
+      "team_id": "3",
+      "player_name": "Jalen Coker",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 11,
+      "pick": 3,
+      "team_id": "9",
+      "player_name": "Zach Charbonnet",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 11,
+      "pick": 4,
+      "team_id": "5",
+      "player_name": "Deebo Samuel Sr.",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 11,
+      "pick": 5,
+      "team_id": "2",
+      "player_name": "Mark Andrews",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 11,
+      "pick": 6,
+      "team_id": "1",
+      "player_name": "Travis Kelce",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 11,
+      "pick": 7,
+      "team_id": "7",
+      "player_name": "Rams D/ST",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 11,
+      "pick": 8,
+      "team_id": "12",
+      "player_name": "Mike Washington Jr.",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 11,
+      "pick": 9,
+      "team_id": "6",
+      "player_name": "Chris Rodriguez Jr.",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 11,
+      "pick": 10,
+      "team_id": "2",
+      "player_name": "Tyler Allgeier",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 11,
+      "pick": 11,
+      "team_id": "8",
+      "player_name": "Texans D/ST",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 11,
+      "pick": 12,
+      "team_id": "11",
+      "player_name": "Aaron Jones Sr.",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 12,
+      "pick": 1,
+      "team_id": "11",
+      "player_name": "Rashid Shaheed",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 12,
+      "pick": 2,
+      "team_id": "8",
+      "player_name": "Samaje Perine",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 12,
+      "pick": 3,
+      "team_id": "2",
+      "player_name": "Tank Bigsby",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 12,
+      "pick": 4,
+      "team_id": "6",
+      "player_name": "Brandon Aubrey",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 12,
+      "pick": 5,
+      "team_id": "12",
+      "player_name": "Keenan Allen",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 12,
+      "pick": 6,
+      "team_id": "7",
+      "player_name": "Keaton Mitchell",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 12,
+      "pick": 7,
+      "team_id": "1",
+      "player_name": "Tyler Shough",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 12,
+      "pick": 8,
+      "team_id": "2",
+      "player_name": "Matthew Stafford",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 12,
+      "pick": 9,
+      "team_id": "5",
+      "player_name": "Patrick Mahomes",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 12,
+      "pick": 10,
+      "team_id": "9",
+      "player_name": "Jordyn Tyson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 12,
+      "pick": 11,
+      "team_id": "3",
+      "player_name": "Brian Robinson Jr.",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 12,
+      "pick": 12,
+      "team_id": "4",
+      "player_name": "Tyjae Spears",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 13,
+      "pick": 1,
+      "team_id": "4",
+      "player_name": "Tank Dell",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 13,
+      "pick": 2,
+      "team_id": "3",
+      "player_name": "Broncos D/ST",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 13,
+      "pick": 3,
+      "team_id": "9",
+      "player_name": "Jared Goff",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 13,
+      "pick": 4,
+      "team_id": "5",
+      "player_name": "Steelers D/ST",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 13,
+      "pick": 5,
+      "team_id": "10",
+      "player_name": "Seahawks D/ST",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 13,
+      "pick": 6,
+      "team_id": "1",
+      "player_name": "Ravens D/ST",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 13,
+      "pick": 7,
+      "team_id": "7",
+      "player_name": "Tre Tucker",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 13,
+      "pick": 8,
+      "team_id": "12",
+      "player_name": "Chargers D/ST",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 13,
+      "pick": 9,
+      "team_id": "6",
+      "player_name": "Denzel Boston",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 13,
+      "pick": 10,
+      "team_id": "2",
+      "player_name": "Eagles D/ST",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 13,
+      "pick": 11,
+      "team_id": "8",
+      "player_name": "Juwan Johnson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 13,
+      "pick": 12,
+      "team_id": "11",
+      "player_name": "Jaguars D/ST",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 14,
+      "pick": 1,
+      "team_id": "11",
+      "player_name": "Bo Nix",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 14,
+      "pick": 2,
+      "team_id": "8",
+      "player_name": "Malik Davis",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 14,
+      "pick": 3,
+      "team_id": "10",
+      "player_name": "Chris Brooks",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 14,
+      "pick": 4,
+      "team_id": "6",
+      "player_name": "Patriots D/ST",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 14,
+      "pick": 5,
+      "team_id": "12",
+      "player_name": "Travis Hunter",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 14,
+      "pick": 6,
+      "team_id": "7",
+      "player_name": "George Holani",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 14,
+      "pick": 7,
+      "team_id": "1",
+      "player_name": "Alvin Kamara",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 14,
+      "pick": 8,
+      "team_id": "10",
+      "player_name": "Tre' Harris",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 14,
+      "pick": 9,
+      "team_id": "5",
+      "player_name": "Cameron Dicker",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 14,
+      "pick": 10,
+      "team_id": "9",
+      "player_name": "Brock Purdy",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 14,
+      "pick": 11,
+      "team_id": "3",
+      "player_name": "Jason Myers",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 14,
+      "pick": 12,
+      "team_id": "4",
+      "player_name": "Dontayvion Wicks",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 15,
+      "pick": 1,
+      "team_id": "4",
+      "player_name": "Chiefs D/ST",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 15,
+      "pick": 2,
+      "team_id": "3",
+      "player_name": "Lions D/ST",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 15,
+      "pick": 3,
+      "team_id": "9",
+      "player_name": "Raiders D/ST",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 15,
+      "pick": 4,
+      "team_id": "5",
+      "player_name": "Cooper Kupp",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 15,
+      "pick": 5,
+      "team_id": "10",
+      "player_name": "Kaelon Black",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 15,
+      "pick": 6,
+      "team_id": "1",
+      "player_name": "Hunter Henry",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 15,
+      "pick": 7,
+      "team_id": "7",
+      "player_name": "Isaac TeSlaa",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 15,
+      "pick": 8,
+      "team_id": "12",
+      "player_name": "Ka'imi Fairbairn",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 15,
+      "pick": 9,
+      "team_id": "6",
+      "player_name": "Braelon Allen",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 15,
+      "pick": 10,
+      "team_id": "2",
+      "player_name": "Adonai Mitchell",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 15,
+      "pick": 11,
+      "team_id": "8",
+      "player_name": "Terrance Ferguson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 15,
+      "pick": 12,
+      "team_id": "11",
+      "player_name": "Harrison Mevis",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 16,
+      "pick": 1,
+      "team_id": "11",
+      "player_name": "Jaylen Wright",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 16,
+      "pick": 2,
+      "team_id": "8",
+      "player_name": "Cam Little",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 16,
+      "pick": 3,
+      "team_id": "2",
+      "player_name": "Harrison Butker",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 16,
+      "pick": 4,
+      "team_id": "6",
+      "player_name": "Dylan Sampson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 16,
+      "pick": 5,
+      "team_id": "12",
+      "player_name": "Jordan Love",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 16,
+      "pick": 6,
+      "team_id": "7",
+      "player_name": "Spencer Shrader",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 16,
+      "pick": 7,
+      "team_id": "1",
+      "player_name": "Eddy Pineiro",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 16,
+      "pick": 8,
+      "team_id": "10",
+      "player_name": "Tyler Loop",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 16,
+      "pick": 9,
+      "team_id": "5",
+      "player_name": "Najee Harris",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 16,
+      "pick": 10,
+      "team_id": "9",
+      "player_name": "Brayden Narveson",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 16,
+      "pick": 11,
+      "team_id": "3",
+      "player_name": "Isiah Pacheco",
+      "bid_amount": null,
+      "keeper": false
+    },
+    {
+      "round": 16,
+      "pick": 12,
+      "team_id": "4",
+      "player_name": "Jake Elliott",
+      "bid_amount": null,
+      "keeper": false
+    }
+  ],
+  "provider": "espn"
+}

@@ -53,6 +53,7 @@ class Matchup:
     home_score: float
     away_score: float
     kind: MatchupKind = MatchupKind.REGULAR
+    weeks: int = 1  # NFL weeks this matchup spans (some leagues use 2-week playoff rounds)
 
     @property
     def is_bye(self) -> bool:

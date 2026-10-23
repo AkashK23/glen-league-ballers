@@ -75,10 +75,10 @@ def _streaks(h: LeagueHistory) -> list[dict]:
 
 
 def single_game_records(h: LeagueHistory, n: int = 10) -> dict:
-    """Regular season + championship bracket games (consolation excluded)."""
+    """One-week regular season + championship bracket games (consolation excluded)."""
     scores, games = [], []
     for s, m, home, away in h.iter_matchups():
-        if away is None or m.kind == MatchupKind.CONSOLATION or not is_completed(m):
+        if away is None or m.kind == MatchupKind.CONSOLATION or m.weeks != 1 or not is_completed(m):
             continue
         base = {"year": s.year, "week": m.week, "playoff": m.kind == MatchupKind.PLAYOFF}
         scores.append({**base, "owner": home.name, "opponent": away.name, "points": m.home_score})
@@ -112,7 +112,7 @@ def playoff_records(h: LeagueHistory, n: int = 10) -> dict:
         names[o.key] = o.name
         if t.final_rank == 1:
             agg[o.key]["championships"] += 1
-        if t.seed is not None and t.seed <= s.playoff_team_count:
+        if s.champion is not None and t.seed is not None and t.seed <= s.playoff_team_count:
             agg[o.key]["appearances"] += 1
 
     games = []
@@ -134,6 +134,7 @@ def playoff_records(h: LeagueHistory, n: int = 10) -> dict:
                     "opponent": opp.name,
                     "year": s.year,
                     "week": m.week,
+                    "weeks": m.weeks,
                     "points": pts,
                     "margin": round(pts - opp_pts, 2),
                 }
@@ -148,7 +149,8 @@ def playoff_records(h: LeagueHistory, n: int = 10) -> dict:
         "most_appearances": _top(table, "appearances", n),
         "most_playoff_wins": _top(table, "wins", n),
         "best_playoff_win_pct": _top([r for r in table if r["wins"] + r["losses"]], "win_pct", n),
-        "most_points_in_playoff_game": _top(games, "points", n),
+        "most_points_in_1_week_playoff_game": _top([g for g in games if g["weeks"] == 1], "points", n),
+        "most_points_in_2_week_playoff_matchup": _top([g for g in games if g["weeks"] == 2], "points", n),
         "largest_playoff_margin": _top(games, "margin", n),
     }
 

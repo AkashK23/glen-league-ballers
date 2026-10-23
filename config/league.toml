@@ -2,23 +2,80 @@
 
 [league]
 provider = "espn"          # swap to "sleeper", "yahoo", ... once a provider exists
-league_id = 0              # from your ESPN league URL: ...?leagueId=XXXXXX
+league_id = 307073         # from your ESPN league URL: ...?leagueId=XXXXXX
 first_year = 2014
 
 # Canonical owners. Stats are keyed by person, not team name. `ids` lists every
 # platform account id that belongs to this person (ESPN member ids look like
 # "{ABCD-...}"; run `sync` once and look in data/seasons/*.json to find them).
 # Owners not listed here still show up, using the platform's name for them.
-#
-# [owners.ruda]
-# name = "Ruda"
-# ids = ["{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}"]
+[owners.akash]
+name = "Akash"
+ids = ["{C55F00AC-DBA2-4FF3-9F00-ACDBA2AFF378}"]
+
+[owners.adit]
+name = "Adit"
+ids = ["{AA64723D-228B-4C48-A472-3D228B5C48DC}"]
+
+[owners.girish]
+name = "Girish"
+ids = ["{235B4E67-83FD-4C73-9B4E-6783FD7C733F}"]
+
+[owners.sid]
+name = "Sid"
+ids = ["{0FB416A7-2F19-4289-B416-A72F19A289DE}"]
+
+[owners.ashwin]
+name = "Ashwin"
+ids = ["{85E71877-5755-4D93-A718-775755ED93D7}"]
+
+[owners.ruda]
+name = "Ruda"
+ids = ["{F3E158CF-5540-40D7-A158-CF554060D7C8}"]
+
+[owners.brian]
+name = "Brian"
+ids = ["{9C3284C5-C338-451D-B284-C5C338A51D01}", "{8C3F5BC1-91DD-4050-BF5B-C191DDD0504C}", "{B925125F-C0C9-482C-A512-5FC0C9D82C37}"]
+
+[owners.anish]
+name = "Anish"
+ids = ["{C386640A-30D8-48A8-8664-0A30D818A8BB}"]
+
+[owners.sujay]
+name = "Sujay"
+ids = ["{5756F192-0CDE-4A39-96F1-920CDEFA3988}"]
+
+[owners.arjun]
+name = "Arjun"
+ids = ["{BC264024-6074-48D4-A640-246074C8D4C7}"]
+
+[owners.will]
+name = "Will"
+ids = ["{5DB5F0E2-3DAE-4466-B5F0-E23DAE5466D9}"]
+
+[owners.mayur]
+name = "Mayur"
+ids = ["{3047998B-EC5C-4E62-8799-8BEC5C5E6286}"]
+
+[owners.arnav]
+name = "Arnav"
+ids = ["{9C9FA2AD-410C-4341-9FA2-AD410C4341A9}"]
+
+[owners.revant]
+name = "Revant"
+ids = ["{0BC63A20-2BCB-4A21-863A-202BCB5A2102}"]
 
 # Featured rivalries for the Rivalries page (the full H2H grid is automatic).
-#
-# [[rivalries]]
-# owners = ["brian", "girish"]
-#
-# [[rivalries]]
-# owners = ["adit", "arnav"]
-# frozen_after = 2016
+[[rivalries]]
+owners = ["brian", "girish"]
+
+[[rivalries]]
+owners = ["adit", "ruda"]
+note = "its a rivalry i swear guys"
+
+[[rivalries]]
+owners = ["mayur", "sujay"]
+
+[[rivalries]]
+owners = ["adit", "arnav"]
+frozen_after = 2016

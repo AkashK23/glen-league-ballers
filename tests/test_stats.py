@@ -19,7 +19,7 @@ def _season(year: int) -> Season:
         Matchup(1, "1", "2", 130, 110, R), Matchup(1, "3", "4", 100, 90, R),
         Matchup(2, "1", "3", 120, 105, R), Matchup(2, "2", "4", 125, 95, R),
         Matchup(3, "1", "4", 140, 95, R), Matchup(3, "2", "3", 115, 105, R),
-        Matchup(4, "1", "2", 150, 100, P), Matchup(4, "3", "4", 80, 70, C),
+        Matchup(4, "1", "2", 250, 200, P, weeks=2), Matchup(4, "3", "4", 80, 70, C, weeks=2),
     ]
     return Season(year, "Test League", 3, 2, owners, teams, matchups)
 
@@ -30,8 +30,10 @@ def _history(years=(2024, 2025)) -> LeagueHistory:
 
 def test_single_game_and_season_records():
     book = record_book(_history())
-    assert book["single_game"]["most_points"][0]["points"] == 150
-    assert book["single_game"]["largest_margin"][0]["margin"] == 50
+    # the 2-week playoff matchup (250) is not a single game
+    assert book["single_game"]["most_points"][0]["points"] == 140
+    assert book["single_game"]["largest_margin"][0]["margin"] == 45
+    assert book["playoffs"]["most_points_in_2_week_playoff_matchup"][0]["points"] == 250
     # consolation 70-point game is excluded from single-game records
     assert book["single_game"]["least_points"][0]["points"] == 90
     assert book["single_season"]["best_record"][0]["owner"] == "Alice"
@@ -40,7 +42,14 @@ def test_single_game_and_season_records():
 
 
 def test_playoffs_and_career():
-    book = record_book(_history())
+    in_progress = _season(2026)
+    for t in in_progress.teams:
+        t.final_rank = None
+    in_progress.matchups = [m for m in in_progress.matchups if m.kind == MatchupKind.REGULAR]
+    h = _history()
+    h = LeagueHistory(h.seasons + [in_progress], {"alice": {"name": "Alice", "ids": ["A"]}})
+    book = record_book(h)
+    assert book["playoffs"]["most_appearances"][0]["appearances"] == 2  # 2026 not counted yet
     champs = book["playoffs"]["most_championships"][0]
     assert (champs["owner"], champs["championships"], champs["wins"]) == ("Alice", 2, 2)
     career = {r["owner"]: r for r in book["all_time"]["career"]}
@@ -57,6 +66,7 @@ def test_rivalry_report_respects_order_and_freeze():
     assert r["championships"] == [0, 2]
     [frozen] = rivalry_report(h, [{"owners": ["alice", "B"], "frozen_after": 2024}])
     assert frozen["wins"] == [2, 0]
+    assert frozen["championships"] == [1, 0]
 
 
 def test_owner_identity_survives_team_renames():
