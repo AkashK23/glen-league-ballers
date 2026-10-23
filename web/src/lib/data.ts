@@ -235,11 +235,66 @@ export function blurbHtml(text: string) {
     .join("");
 }
 
-// Optional hand-written season notes: web/src/content/seasons/<year>.md
-const notes = import.meta.glob<{ frontmatter: Record<string, any>; Content: any }>(
-  "../content/seasons/*.md",
-  { eager: true },
-);
+// ---------- hand-written / archived content (web/src/content) ----------
+
+type MdModule = { frontmatter: Record<string, any>; compiledContent: () => Promise<string> };
+
+/** A markdown file's HTML, with root-relative links/images (/archive/..) moved under the site base path. */
+export async function bodyHtml(mod: { compiledContent: () => Promise<string> }) {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+  return (await mod.compiledContent()).replace(/(src|href)="\/(?!\/)/g, `$1="${base}/`);
+}
+
+// Season recap + Player of the Year: web/src/content/seasons/<year>.md
+const notes = import.meta.glob<MdModule>("../content/seasons/*.md", { eager: true });
 export function seasonNotes(year: number) {
   return notes[`../content/seasons/${year}.md`] ?? null;
 }
+
+// Extra season sections (notes, teams & players, articles, media...): content/season-extras/<year>/*.md
+export interface ExtraItem {
+  id: string;
+  year: number;
+  section: string;
+  title: string;
+  order: number;
+  mod: MdModule;
+}
+const extras = import.meta.glob<MdModule>("../content/season-extras/*/*.md", { eager: true });
+const allExtras: ExtraItem[] = Object.entries(extras)
+  .map(([p, mod]) => {
+    const [, year, file] = p.match(/season-extras\/(\d+)\/(.+)\.md$/)!;
+    return {
+      id: file,
+      year: Number(year),
+      section: String(mod.frontmatter.section ?? "Notes"),
+      title: String(mod.frontmatter.title ?? file),
+      order: Number(mod.frontmatter.order ?? 50),
+      mod,
+    };
+  })
+  .sort((a, b) => a.order - b.order);
+
+/** [[section, items], ...] in page order */
+export function seasonExtras(year: number): [string, ExtraItem[]][] {
+  const groups = new Map<string, ExtraItem[]>();
+  for (const x of allExtras.filter((x) => x.year === year)) {
+    if (!groups.has(x.section)) groups.set(x.section, []);
+    groups.get(x.section)!.push(x);
+  }
+  return [...groups.entries()];
+}
+
+// Standalone articles: content/articles/*.md, plus every season "Articles" item
+const articleFiles = import.meta.glob<MdModule>("../content/articles/*.md", { eager: true });
+export const articles = Object.entries(articleFiles).map(([p, mod]) => ({
+  slug: p.split("/").pop()!.replace(".md", ""),
+  title: String(mod.frontmatter.title),
+  subtitle: mod.frontmatter.subtitle as string | undefined,
+  author: mod.frontmatter.author as string | undefined,
+  years: mod.frontmatter.years as string | undefined,
+  mod,
+}));
+export const seasonArticles = allExtras
+  .filter((x) => /article|media/i.test(x.section) && !/video|podcast/i.test(x.title) && /article|ranking|review|preview|comparison|coverage/i.test(x.title + " " + x.section))
+  .sort((a, b) => b.year - a.year || a.order - b.order);

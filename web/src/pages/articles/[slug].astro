@@ -1,0 +1,21 @@
+---
+import Base from "../../layouts/Base.astro";
+import { articles, bodyHtml, url } from "../../lib/data";
+
+export function getStaticPaths() {
+  return articles.map((a) => ({ params: { slug: a.slug }, props: { article: a } }));
+}
+const { article: a } = Astro.props as { article: (typeof articles)[number] };
+const html = await bodyHtml(a.mod);
+---
+
+<Base title={a.title} heroTitle={a.subtitle ?? a.title} heroKicker={a.years} hero="records">
+  <p class="small"><a href={url("/articles")}>← All articles</a></p>
+  <article class="article">
+    <div set:html={html} />
+  </article>
+</Base>
+
+<style>
+  .article { max-width: 78ch; margin: 0 auto; }
+</style>

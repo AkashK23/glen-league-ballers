@@ -4,7 +4,7 @@ import StandingsTable from "../../components/StandingsTable.astro";
 import Matchup from "../../components/Matchup.astro";
 import WrittenRanking from "../../components/WrittenRanking.astro";
 import Trophy from "../../components/Trophy.astro";
-import { type SeasonData, playoffRoundName, pts, seasonNotes, seasons, slug, url, weekUrl, writtenRankings } from "../../lib/data";
+import { type SeasonData, bodyHtml, playoffRoundName, pts, seasonExtras, seasonNotes, seasons, slug, url, weekUrl, writtenRankings } from "../../lib/data";
 
 export function getStaticPaths() {
   return seasons.map((s) => ({ params: { year: String(s.year) }, props: { season: s } }));
@@ -12,6 +12,10 @@ export function getStaticPaths() {
 
 const { season: s } = Astro.props as { season: SeasonData };
 const notes = seasonNotes(s.year);
+const recapHtml = notes ? await bodyHtml(notes) : "";
+const extraSections = await Promise.all(
+  seasonExtras(s.year).map(async ([section, items]) => [section, await Promise.all(items.map(async (x) => ({ ...x, html: await bodyHtml(x.mod) })))] as const),
+);
 const written = writtenRankings(s.year); // oldest first, like the original archive
 const prev = seasons.find((x) => x.year === s.year - 1);
 const next = seasons.find((x) => x.year === s.year + 1);
@@ -81,7 +85,7 @@ const draftRounds = [...new Set(s.draft.map((p) => p.round))];
   {
     notes && (
       <section class="prose notes">
-        <notes.Content />
+        <div set:html={recapHtml} />
         {notes.frontmatter.player_of_the_year && (
           <p class="center">Player of the Year: <strong class="poy">{notes.frontmatter.player_of_the_year}</strong></p>
         )}
@@ -138,6 +142,24 @@ const draftRounds = [...new Set(s.draft.map((p) => p.round))];
     )
   }
 
+  {
+    extraSections.map(([section, items]) => (
+      <section id={`s-${section.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
+        <h2 class="section-title">{section}</h2>
+        {items.length === 1 && items[0].title === section ? (
+          <div class="archive-wrap solo" id={`x-${items[0].id}`} set:html={items[0].html} />
+        ) : (
+          items.map((x) => (
+            <details class="accordion" id={`x-${x.id}`}>
+              <summary>{x.title}</summary>
+              <div class="body archive-wrap" set:html={x.html} />
+            </details>
+          ))
+        )}
+      </section>
+    ))
+  }
+
   <section>
     <h2 class="section-title">Weekly Results</h2>
     {s.has_box_scores && <p class="center muted small">Click any game for the full box score.</p>}
@@ -190,7 +212,7 @@ const draftRounds = [...new Set(s.draft.map((p) => p.round))];
 </Base>
 
 <script is:inline>
-  // Links like /seasons/2026#pr-week-6 open that ranking.
+  // Links like /seasons/2026#pr-week-6 or #x-<article> open that section.
   const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
   if (target && target.tagName === "DETAILS") {
     target.open = true;
@@ -213,5 +235,7 @@ const draftRounds = [...new Set(s.draft.map((p) => p.round))];
   .round { display: flex; flex-direction: column; gap: 8px; }
   .round h3 { margin: 0; }
   .consolation { margin-top: 18px; }
+  .archive-wrap { max-width: 82ch; }
+  .archive-wrap.solo { margin: 0 auto; }
   .games { display: grid; gap: 10px; margin: 6px 0 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); }
 </style>

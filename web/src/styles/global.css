@@ -166,6 +166,17 @@ details > summary { cursor: pointer; color: var(--brand); font-size: 0.85rem; ma
 .prose { max-width: 75ch; }
 .prose p { margin: 0 0 1em; }
 
+/* ---------- content imported from the old archive ---------- */
+.archive-html { line-height: 1.65; overflow-wrap: anywhere; }
+.archive-html p { margin: 0 0 1em; }
+.archive-html h3 { margin: 1.4em 0 0.5em; color: var(--heading); }
+.archive-html img { display: block; max-width: min(100%, 560px); max-height: 560px; width: auto; height: auto; margin: 14px auto; border-radius: 3px; }
+.archive-html table { margin: 12px 0; font-size: 0.85rem; display: block; overflow-x: auto; }
+.archive-html td, .archive-html th { white-space: nowrap; }
+.archive-html tbody tr:first-child td { font-weight: 700; color: var(--heading); }
+.video { position: relative; width: min(100%, 640px); aspect-ratio: 16 / 9; margin: 14px auto; }
+.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 4px; }
+
 /* ---------- scroll reveal (only when JS is on, see Base.astro) ---------- */
 .js .reveal {
   opacity: 0;

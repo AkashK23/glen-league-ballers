@@ -1,0 +1,54 @@
+---
+import Base from "../../layouts/Base.astro";
+import { articles, seasonArticles, url } from "../../lib/data";
+
+// Fix caps-lock accidents ("rUDA'S nba cOMPARISONS") and shouting for the list view.
+const tidy = (s: string) => {
+  s = s.replace(/^article:\s*/i, "");
+  if (/^[a-z][A-Z]/.test(s)) s = [...s].map((c) => (c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase())).join("");
+  if (s === s.toUpperCase()) s = s.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase());
+  return s;
+};
+---
+
+<Base title="Articles" heroTitle="Articles" heroSub="Recaps, rankings, previews and other writing from around the league" hero="records">
+  <h2 class="section-title">Features</h2>
+  <div class="grid grid-2">
+    {
+      articles.map((a) => (
+        <a class="card feature" href={url(`/articles/${a.slug}`)}>
+          {a.years && <span class="pill gold">{a.years}</span>}
+          <h3 class="title">{a.title}</h3>
+          {a.subtitle && <p class="muted">{a.subtitle}</p>}
+          {a.author && <p class="small muted">By {a.author}</p>}
+        </a>
+      ))
+    }
+  </div>
+
+  <h2 class="section-title">From the Seasons</h2>
+  <div class="list">
+    {
+      seasonArticles.map((x) => (
+        <a class="row" href={url(`/seasons/${x.year}#x-${x.id}`)}>
+          <span class="year">{x.year}</span>
+          <span class="t">{tidy(x.title)}</span>
+          <span class="go">→</span>
+        </a>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .feature { color: var(--text); display: flex; flex-direction: column; gap: 4px; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+  .feature:hover { text-decoration: none; transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 8px 20px rgb(0 0 0 / 0.08); }
+  .title { color: var(--heading); font-size: 1.4rem; letter-spacing: 0; text-transform: none; margin: 6px 0 0; }
+  .feature p { margin: 0; }
+  .list { max-width: 720px; margin: 0 auto; }
+  .row { display: flex; gap: 16px; align-items: baseline; padding: 12px 6px; border-bottom: 1px solid var(--border); color: var(--text); transition: background 0.15s, padding 0.15s; }
+  .row:hover { text-decoration: none; background: var(--surface-2); padding-left: 12px; }
+  .year { font-weight: 700; color: var(--accent); width: 3em; }
+  .t { flex: 1; }
+  .go { color: var(--muted); }
+</style>

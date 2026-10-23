@@ -71,9 +71,15 @@ Hand-written content:
   Copy `web/src/content/power-rankings/TEMPLATE.md`; list teams in order with a
   blurb each. Records, PPG, titles and week-to-week movement are filled in
   automatically. The newest one also shows on the home page.
-  The 2018–2025 rankings were imported from the old Weebly site as cleaned
+  The 2017–2025 rankings were imported from the old Weebly site as cleaned
   HTML (images in `web/public/power-rankings/`); they render as free-form
   write-ups.
+- `web/src/content/season-extras/<year>/*.md`: extra season sections (rules,
+  draft and playoff notes, teams and players, articles, media, punishments...).
+  `section:` groups them on the season page; `title:` and `order:` set the bar
+  label and position. Imported from the old site, images in `web/public/archive/`.
+- `web/src/content/articles/*.md`: standalone articles (the First Era Recap),
+  listed on `/articles` along with every season's articles.
 - `web/src/assets/hero/<key>.jpg`: banner photos. Keys: `home`, `season`,
   `records`, `rivalries`, `stats`, `owner`, and `default` as the fallback.
   Without photos, a drawn striped background is used.
