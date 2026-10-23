@@ -1,0 +1,30 @@
+---
+title: "Week 4"
+order: 3
+source: "glenleague.weebly.com/2022.html"
+---
+
+<div class="archive-html">
+<p>Alright guys! We're back for another week. As always, Arjun and I have spent an immense amount of time carefully curating the rankings. This truly sacred process will -<br/><br/>Wait, what's happening?<br/><br/><em>WARNING<br/>ERROR<br/>FFFJJFJFJJSDFZZRRZRRTTT</em><br/><br/>WHAT IS THIS WHAT'S HAPPENING<br/><br/>WE'RE BEING HACKED<br/><br/><em>JOJPGPPROORORRROOOOOOOOOOOOORRRR</em><br/><br/>SOMEONE HAS TAKEN OVER THE SITE, THEY'RE UPLOADING THEIR OWN RANKINGS OH GOD THE HUMANITY<br/><br/><em>ZZZEEEEEEEEEEPPPPPPPPPPPP-</em></p>
+<p>* * *</p>
+<p>Welcome to this week’s rankings done by the one and only, <u>PROFESSOR (SID)CAMORE</u>. As you may know, the world is filled with species known as Pokémon, and we are here today to introduce a few new variants that were recently discovered here in the GLB region. Please note that Sidcamore is not responsible for any and all slandering involved in this, as he has pushed all blame to his proxy, the lowly aid known only as <em>KottOAK</em>. Without further ado, let’s begin!<br/> <br/><strong>10. Wubas, The Pathetic Fish </strong><strong>Pokémon</strong><strong> (-) {0-3}</strong><br/>This Pokémon is known to many as the ugliest and many trainers and even other Pokémon mock what it calls its strengths (Devin Singletary and Javonte to name a few), but what many do not know is that it is extremely resilient and confident in its abilities. Who knows, maybe that’ll pay off and we may see some beauty emerge from inside this LITTLE Pokémon.<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2022/03-week-4-03eeed50.png"/>
+<p><br/><strong>9. Ashmy, the Bagworm Pokémon (-1) {1-2}</strong><br/>Ashmy’s are known to be weak and small and must have protection through the use of a cloak of whatever it can find near it. However, due to it being weak, it constantly loses materials in its cloak due to it having injuries(Montgomery, Allen, Godwin) and sometimes must resort to trading resources with other Pokémon just to survive. There’s hope though, as this Pokémon already has one win under its belt and could squeeze out some more by adapting.<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2022/03-week-4-133abd06.png"/>
+<p><br/><strong>8. Sidgon, the Endurance Pokémon (-2) {1-2}<br/></strong>Sidgon’s are known to be sluggish as they are essentially cocoons holding power. With its stubby legs it often finds issues when trying to run(Fournette, Gibson, BRIAN ROBINSON LOL), but it hangs on due to its sheer determination and has the potential to become something truly terrifying…<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2022/03-week-4-59e1b51d.png"/>
+<p><br/><strong>7. Akasuttor, the Multifaced Pokémon (+2) {1-2}<br/></strong>While the Akasuttor has very strong legs and boasts a strong intelligence stemming from the fact that it has three heads (each with a different expression), it does hold one significant flaw. IT HAS NO ARMS!! As such, it is unable to simple tasks like say throwing and football or catching one(Tua and Russ). Until it can figure out how to do that, this Pokémon will inevitably struggle to rise up and win.<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2022/03-week-4-8d25485c.jpg"/>
+<p><br/><strong>6. Archop, the Superpower Pokémon (-2) {1-2}<br/></strong>The Archops are very proud of their body, as it completely made of muscles that can do literally anything. However, it appears this variant differs as it seems to have many injuries, possibly due to it picking too many fights with Pokémon that could be out of its league(Kamara, Swift, MT, Julio)? Only time will tell if its single power(Lamar) will be able to carry it to the top.<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2022/03-week-4-9c00f5e6.jpg"/>
+<p><br/><strong>5. Aditorb, the Ball Pokémon (-) {1-2}<br/></strong>The Aditorbs are a very interesting type of Pokémon. All may seem to be going its way and it starts off very proud and confident, but come Sunday Night and Monday, it has a tendency to self-destruct! While the Aditorb has the power to set the right lineup and win, its imploding habits may lead to more doubts and setbacks.<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2022/03-week-4-4bfe09d6.jpg"/>
+<p><br/><strong>4. Girbre, The Worry Pokémon (-1) {3-0}</strong><br/>Girbre’s are known for their hidden strength as well as their evident pedo-stache, however they all have a tendency to worry too much about its assets. This Pokémon is also known to fight with the Wubass and have thus developed a rivalry.<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2022/03-week-4-abc7d535.png"/>
+<p><strong>3. AnishLord, the Whale Pokémon (-1) {3-0}</strong><br/>The Anishlord is truly a sight to see, as it is the biggest recorded species ever known. It maintains a well-balanced diet of QB, RBs, and WRs and can squash any competition with its sheer size.  <br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2022/03-week-4-195a6186.png"/>
+<p><br/><strong>2. Rudakazam, The Psychic Pokémon (+5) {2-1} </strong><br/>Rudakazam is known to be very intelligent, boasting an IQ of 5000 Matthew Berry’s. As such, its intellect is often sought out by other Pokémon in order to solve issues. Some even say this Pokémon is able to predict the future with its intellect. <br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2022/03-week-4-c6ed670a.png"/>
+<p><br/><strong>1. WillTwo, The Overpowered Pokémon (-) {2-1}<br/></strong>It is said that Willtwo was artificially created for the league. Many of its opponents tremble just by looking at its weekly projections and impressive facial hair. It wields the great two-pronged spoon of Josh Allen and Stefon Diggs and shows no mercy as it does what it does best, Win.<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2022/03-week-4-16e7aea6.png"/>
+</div>

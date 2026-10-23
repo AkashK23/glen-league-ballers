@@ -180,10 +180,10 @@ export interface WrittenRanking {
   author: string | null;
   date: string | null;
   entries: RankingEntry[];
-  Content: any; // optional intro written in the body
+  html: () => Promise<string>; // the body (intro, or a whole free-form write-up) as HTML
 }
 
-const writtenFiles = import.meta.glob<{ frontmatter: Record<string, any>; Content: any }>(
+const writtenFiles = import.meta.glob<{ frontmatter: Record<string, any>; compiledContent: () => Promise<string> }>(
   "../content/power-rankings/*/*.md",
   { eager: true },
 );
@@ -207,7 +207,7 @@ export function writtenRankings(year: number): WrittenRanking[] {
           extras: r.extras ?? {},
           prev_rank: null as number | null,
         })),
-        Content: mod.Content,
+        html: mod.compiledContent,
       };
     })
     .sort((a, b) => a.order - b.order);

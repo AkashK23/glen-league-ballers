@@ -11,6 +11,9 @@ interface Props {
 const { ranking: r, season: s, limit } = Astro.props;
 const entries = limit ? r.entries.slice(0, limit) : r.entries;
 const prevSeason = seasons.find((x) => x.year === s.year - 1);
+// Root-relative image paths (e.g. /power-rankings/2021/x.jpg) need the site's base path.
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const body = (await r.html()).replace(/(src|href)="\/(?!\/)/g, `$1="${base}/`);
 
 // Facts filled in from the data, so the writer only has to write the take.
 function facts(owner: string) {
@@ -38,7 +41,7 @@ function facts(owner: string) {
 
 <div class="written">
   {(r.author || r.date) && <p class="byline">{r.author && <>By {r.author}</>}{r.author && r.date && " · "}{r.date}</p>}
-  {!limit && <div class="intro prose"><r.Content /></div>}
+  {!limit && body.trim() && <div class="intro prose" set:html={body} />}
 
   {
     entries.map((e, i) => {
@@ -88,5 +91,9 @@ function facts(owner: string) {
   .facts li { line-height: 1.7; }
   .blurb :global(p) { margin: 0 0 0.9em; }
   .teaser { margin: 0; color: var(--text); font-size: 0.9rem; }
+  .intro { max-width: 78ch; }
+  .intro :global(img) { display: block; max-width: min(100%, 560px); max-height: 520px; width: auto; height: auto; margin: 14px auto; border-radius: 3px; }
+  .intro :global(p) { margin: 0 0 1em; }
+  .intro :global(.archive-html) { line-height: 1.65; }
   .divider { text-align: center; color: var(--muted); letter-spacing: 0.2em; margin: 18px 0; }
 </style>

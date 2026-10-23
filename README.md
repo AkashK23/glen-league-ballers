@@ -71,6 +71,9 @@ Hand-written content:
   Copy `web/src/content/power-rankings/TEMPLATE.md`; list teams in order with a
   blurb each. Records, PPG, titles and week-to-week movement are filled in
   automatically. The newest one also shows on the home page.
+  The 2018–2025 rankings were imported from the old Weebly site as cleaned
+  HTML (images in `web/public/power-rankings/`); they render as free-form
+  write-ups.
 - `web/src/assets/hero/<key>.jpg`: banner photos. Keys: `home`, `season`,
   `records`, `rivalries`, `stats`, `owner`, and `default` as the fallback.
   Without photos, a drawn striped background is used.

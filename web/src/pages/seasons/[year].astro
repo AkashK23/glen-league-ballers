@@ -12,7 +12,7 @@ export function getStaticPaths() {
 
 const { season: s } = Astro.props as { season: SeasonData };
 const notes = seasonNotes(s.year);
-const written = writtenRankings(s.year).reverse(); // latest first
+const written = writtenRankings(s.year); // oldest first, like the original archive
 const prev = seasons.find((x) => x.year === s.year - 1);
 const next = seasons.find((x) => x.year === s.year + 1);
 const seasonNumber = seasons.length - seasons.findIndex((x) => x.year === s.year);
@@ -99,7 +99,7 @@ const draftRounds = [...new Set(s.draft.map((p) => p.round))];
       <section id="power">
         <h2 class="section-title">Power Rankings</h2>
         {written.map((w, i) => (
-          <details class="accordion" id={`pr-${w.id}`} open={i === 0}>
+          <details class="accordion" id={`pr-${w.id}`} open={!s.complete && i === written.length - 1}>
             <summary>{w.title}</summary>
             <div class="body"><WrittenRanking ranking={w} season={s} /></div>
           </details>
@@ -191,8 +191,11 @@ const draftRounds = [...new Set(s.draft.map((p) => p.round))];
 
 <script is:inline>
   // Links like /seasons/2026#pr-week-6 open that ranking.
-  const target = location.hash && document.querySelector(`details${CSS.escape(location.hash)}`);
-  if (target) target.open = true;
+  const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (target && target.tagName === "DETAILS") {
+    target.open = true;
+    requestAnimationFrame(() => target.scrollIntoView());
+  }
 </script>
 
 <style>

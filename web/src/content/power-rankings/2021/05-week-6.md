@@ -1,0 +1,29 @@
+---
+title: "Week 6"
+order: 5
+source: "glenleague.weebly.com/2021.html"
+---
+
+<div class="archive-html">
+<p>Welcome to Week 6 Power Rankings, which is automatically sort of a special edition after that UNBELIEVABLE Week 5. The two highest-scoring matchups in league history happened on the same week. Insane.<br/><br/>While I (Adit) am back from my vacation to actually write rankings, I can't really claim much of the credit here, as the highlight of this set is a series of images put together by Arjun. We aimed to address a hot topic in the chat last week: who is every league member's best NFL QB comparison? <br/><br/>For this list, we're focusing on QBs of the modern era. <br/><br/><br/><strong>10. Arjun {1-4} (-)<br/></strong>A win! How exciting. Now you just need to win... out. You got this.<br/><br/>Arjun is short. Ha ha. Everyone laugh at him. Ha ha ha. I'm funny and creative. You know who else is short?<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2021/05-week-6-29df9c02.jpg"/>
+<p><em>QB comparison: Kyler Murray<br/></em><br/><strong>9. Will {1-4} (-1)<br/></strong>Oh dear. Ohhhh dear. Scoring 128 and losing is painful - take it from me. It's tough to drop a team after such an impressive week, but it's also hard to rank a 1-4 team higher than 9. I think we all know where Will ranks in terms of GLB beards though.<br/><br/>Will's franchise is one that everyone roots for but at the end of the day is a basically bland and unexciting spoon of beige pudding. Also, he has historically suffered backbreaking injuries. Remind you of anyone?<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2021/05-week-6-a8cdaf2f.jpg"/>
+<p><em>QB comparison: Teddy Bridgewater</em><br/><br/><strong>8. Anish {2-3} (+1)<br/></strong>If Anish spent as much time researching fantasy moves as he does whining about fantasy, maybe he'd actually get somewhere with his team. Somehow, though, he's 2-3 through all the crying and put together an impressive win over Sid this week. <br/><br/>Anish is THIS close to being kicked out of the league soon. Just wait till we go through his emails.<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2021/05-week-6-e8ef992a.jpg"/>
+<p><em>QB(?) comparison: Jon Gruden<br/></em><br/><strong>7. Ashwin {2-3} (-)<br/></strong>Bruh stop losing. Somehow you have a team that seems great every time I look at it but just isn't winning as much as it should. It wasn't a bad performance, but with Chubb hurt... gotta be concerned.<br/><br/>Shows flashes. Wows you with random games and random seasons. Never puts it together. Is a total meme. Chicago. This one's easy.<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2021/05-week-6-bdd71203.jpg"/>
+<p><em>QB comparison: Mitch Trubisky<br/></em><br/><strong>6. Akash {3-2} (-3)<br/></strong>Sorry bud. A good team devastated by injuries has to drop big time. Look on the bright side: when Geno Smith balls out and people realize Wilson literally wasn't even that good, he won't get his job back and you don't have to suffer through second-half-of-the-season Wilson like I did. Sign Geno. Do it.<br/><br/>Tons of playoff trips and some electrifying years have defined Akash. Tons of injuries hampering potential greatness and a devastating championship loss in 2015 have also defined Akash. You do the math.<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2021/05-week-6-754dcf42.jpg"/>
+<p><em>QB comparison: Cam Newton<br/></em><br/><strong>5. Sid {3-2} (+1)<br/></strong>It's hard to read Sid's team right now. Sometimes he's great. Sometimes he sucks. Instead of analyzing his team in detail, we just decided to put him in the middle because that's easier. <br/><br/>Sid oozes confidence at every turn, ready to trash talk even the greats. He's also a wild partier. He's the one and only Siddy Football.<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2021/05-week-6-ef5c5ad8.jpg"/>
+<p><em>QB comparison: Johnny Manziel<br/></em><br/><strong>4. Adit {2-3} (+1)<br/></strong>Scoring 150 and losing is basically incomprehensible. I don't even know what to say about it anymore. Fantasy sucks. You bet your ass I'm moving up after scoring 150. Records be damned.<br/><br/>Always good, never great. Almost getting there, and blowing it at the last minute. Aside from actually being a winner many years ago, choking in mind-boggling ways despite generally solid play is my MO. There's only one king of doing that.<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2021/05-week-6-667fa83d.jpg"/>
+<p><em>QB comparison: Tony Romo</em><br/><br/><strong>3. Girish {4-1} (-1)<br/></strong>Girish faced a team that lost basically all of its players, and won. Pretty much just did what was expected of him. Gonna sit here waiting for a collapse that will never happen because fantasy is cruel. Why is Girish good.<br/><br/>Is there really even a question about this?<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2021/05-week-6-39ffd588.jpg"/>
+<p><em>QB comparison: Eli Manning</em><br/><br/><strong>2. Brian {3-2} (+2)<br/></strong>Bruh. That is all I have to say. Bruh. 163? Bruh. Thank you for not beating the record. Bruh.<br/><br/>Brian puts up all the stats. He's been impressive in many years. He can never be counted out. And he has approximately nothing to show for it after all this time.<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2021/05-week-6-e5fad21b.jpg"/>
+<p><em>QB comparison: Matt Ryan</em><br/><br/><strong>1. Ruda {4-1} (-)<br/></strong>My respect for your unbelievable fantasy sixth sense ever so slightly overcomes my deep hatred for what you did to me this week. Kadarius Toney? REALLY? It's not that he did well. It's that he had ALMOST 200 YARDS. What the hell is wrong with you.<br/><br/></p>
+<img alt="" loading="lazy" src="/power-rankings/2021/05-week-6-797bd307.jpg"/>
+<p><em>QB comparison: duh </em></p>
+</div>

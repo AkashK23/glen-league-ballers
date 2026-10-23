@@ -1,0 +1,9 @@
+---
+title: "Week 8"
+order: 7
+source: "glenleague.weebly.com/2022.html"
+---
+
+<div class="archive-html">
+<p>Behold the prophetic powers I possess. I will make a prediction about every team that will come true, and it will be amazing because it's definitely not Sunday yet.<br/><br/><strong>10. Arjun {1-6} (-1)<br/></strong>It's time for your team to rise up. Expect great things this week... but stiff competition as well.<br/><br/><strong>9. Ashwin {3-4} (+1)<br/></strong>It's also time for your team to rise up. Also expect great things this week... but also stiff competition as well.<br/><br/><strong>8. Brian {2-5} (-)<br/></strong>It is not time for your team to rise up. I think you spent all your good mojo last year. Worth tho.<br/><br/><strong>7. Sid {3-4} (-)<br/></strong>You suck now sorry kid<br/><br/><strong>6. Akash {3-4} (-1)<br/></strong>I hope you really enjoyed scoring well but losing to me anyway last week because it's gonna happen again. The more the merrier<br/><br/><strong>5. Adit {3-4} (+1)<br/></strong>I've been free of the Monday night nail biters for a while. My prophetic brain indicates they will find me again this week.<br/><br/><strong>4. Will {4-3} (-1)<br/></strong>We will continue to ask ourselves why your record is so low and give you our sympathies which mean absolutely nothing. Enjoy<br/><br/><strong>3. Anish {5-2} (+1)<br/></strong>You will continue to start the 49ers defense for literally no reason, but continue to win despite that for literally no reason.<br/><br/><strong>2. Ruda {4-3} (-)<br/></strong>The NFL MVP is on your team.<br/><br/><strong>1. Girish {7-0} (-)<br/></strong>Brian will try to steal my GG curse and use it against you, but he will be foolish to do so. He has forgotten that you yourself are the living embodiment of GG... Girish Ganesh.</p>
+</div>
