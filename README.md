@@ -65,14 +65,12 @@ Every game links to a box score page (`/seasons/<year>/week/<n>`) with both
 lineups, slot by slot, plus bench and projections. ESPN only has player-level
 box scores from 2019 on; earlier weeks show final scores only.
 
-Power rankings are computed weekly in `stats/power.py` from results alone
-(ESPN's formula: 80% two-step dominance, 15% points per game, 5% average
-margin), so they keep working on any platform.
-
 Hand-written content:
 - `web/src/content/seasons/<year>.md`: recap and `player_of_the_year` (see `2025.md`)
-- `web/src/content/power-rankings/<year>/<label>.md`: commissioner rankings with
-  `title:` and `order:` frontmatter; they show above the computed weekly ones
+- `web/src/content/power-rankings/<year>/<name>.md`: written power rankings.
+  Copy `web/src/content/power-rankings/TEMPLATE.md`; list teams in order with a
+  blurb each. Records, PPG, titles and week-to-week movement are filled in
+  automatically. The newest one also shows on the home page.
 - `web/src/assets/hero/<key>.jpg`: banner photos. Keys: `home`, `season`,
   `records`, `rivalries`, `stats`, `owner`, and `default` as the fallback.
   Without photos, a drawn striped background is used.

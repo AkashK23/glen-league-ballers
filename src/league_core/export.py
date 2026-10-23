@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from .history import LeagueHistory, is_completed
 from .models import Season, TeamSeason
-from .stats import h2h_matrix, power_rankings, record_book, rivalry_report
+from .stats import h2h_matrix, record_book, rivalry_report
 
 
 def _team_row(h: LeagueHistory, t: TeamSeason) -> dict:
@@ -50,17 +50,6 @@ def season_detail(h: LeagueHistory, s: Season) -> dict:
         "regular_season_weeks": s.regular_season_weeks,
         "playoff_team_count": s.playoff_team_count,
         "standings": [_team_row(h, t) for t in (by_finish if complete else by_seed)],
-        "power_rankings": [
-            {
-                "week": w["week"],
-                "rankings": [
-                    {**{k: v for k, v in r.items() if k != "team_id"}, "owner": h.owner_of(s.team(r["team_id"])).name,
-                     "team_name": s.team(r["team_id"]).name}
-                    for r in w["rankings"]
-                ],
-            }
-            for w in power_rankings(s)
-        ],
         "has_box_scores": any(m.box_scores for m in s.matchups),
         "matchups": [
             {

@@ -44,16 +44,6 @@ export interface PickRow {
   keeper: boolean;
 }
 
-export interface PowerRow {
-  rank: number;
-  prev_rank: number | null;
-  power: number;
-  wins: number;
-  losses: number;
-  owner: string;
-  team_name: string;
-}
-
 export interface LineupRow {
   player: string;
   pos: string;
@@ -79,7 +69,6 @@ export interface SeasonData {
   regular_season_weeks: number;
   playoff_team_count: number;
   standings: TeamRow[];
-  power_rankings: { week: number; rankings: PowerRow[] }[];
   has_box_scores: boolean;
   matchups: MatchupRow[];
   draft: PickRow[];
@@ -174,16 +163,76 @@ export function boxScores(year: number): Record<string, BoxWeek[]> {
 export const weekUrl = (year: number, week: number, matchupId?: string) =>
   url(`/seasons/${year}/week/${week}${matchupId ? `#m-${matchupId}` : ""}`);
 
-// Optional hand-written power rankings: web/src/content/power-rankings/<year>/<label>.md
-const writtenRankings = import.meta.glob<{ frontmatter: Record<string, any>; Content: any }>(
+// Hand-written power rankings: web/src/content/power-rankings/<year>/<name>.md
+// See web/src/content/power-rankings/TEMPLATE.md for the format.
+export interface RankingEntry {
+  rank: number;
+  owner: string;
+  blurb: string;
+  extras: Record<string, string>;
+  prev_rank: number | null; // rank in the previous ranking of the same season
+}
+export interface WrittenRanking {
+  id: string;
+  title: string;
+  order: number;
+  week: number | null; // records shown are through this week; null = preseason
+  author: string | null;
+  date: string | null;
+  entries: RankingEntry[];
+  Content: any; // optional intro written in the body
+}
+
+const writtenFiles = import.meta.glob<{ frontmatter: Record<string, any>; Content: any }>(
   "../content/power-rankings/*/*.md",
   { eager: true },
 );
-export function writtenPowerRankings(year: number) {
-  return Object.entries(writtenRankings)
+export function writtenRankings(year: number): WrittenRanking[] {
+  const list = Object.entries(writtenFiles)
     .filter(([p]) => p.includes(`/power-rankings/${year}/`))
-    .map(([p, mod]) => ({ label: mod.frontmatter.title ?? p.split("/").pop()!.replace(".md", ""), order: mod.frontmatter.order ?? 0, ...mod }))
+    .map(([p, mod]) => {
+      const fm = mod.frontmatter;
+      const id = p.split("/").pop()!.replace(".md", "");
+      return {
+        id,
+        title: fm.title ?? id,
+        order: fm.order ?? fm.week ?? 0,
+        week: fm.week ?? null,
+        author: fm.author ?? null,
+        date: fm.date ? String(fm.date).slice(0, 10) : null,
+        entries: ((fm.rankings ?? []) as any[]).map((r, i) => ({
+          rank: i + 1,
+          owner: String(r.owner),
+          blurb: String(r.blurb ?? ""),
+          extras: r.extras ?? {},
+          prev_rank: null as number | null,
+        })),
+        Content: mod.Content,
+      };
+    })
     .sort((a, b) => a.order - b.order);
+  list.forEach((r, i) => {
+    const prev = list[i - 1];
+    if (!prev) return;
+    for (const e of r.entries) e.prev_rank = prev.entries.find((p) => p.owner === e.owner)?.rank ?? null;
+  });
+  return list;
+}
+
+/** Blurbs are plain text: blank lines split paragraphs, plus **bold**, *italic* and [links](url). */
+export function blurbHtml(text: string) {
+  const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return text
+    .trim()
+    .split(/\n\s*\n/)
+    .map((para) =>
+      `<p>${esc(para.trim())
+        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*(.+?)\*/g, "<em>$1</em>")
+        .replace(/\[(.+?)\]\((https?:[^)\s]+)\)/g, '<a href="$2">$1</a>')
+        .replace(/\n/g, "<br>")}</p>`,
+    )
+    .join("");
 }
 
 // Optional hand-written season notes: web/src/content/seasons/<year>.md

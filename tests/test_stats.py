@@ -79,14 +79,3 @@ def test_storage_round_trip(tmp_path):
     [loaded] = load_seasons(tmp_path)
     assert loaded == _season(2025)
 
-
-def test_power_rankings_reward_beating_good_teams():
-    from league_core.stats import power_rankings
-
-    weeks = power_rankings(_season(2025))
-    assert [w["week"] for w in weeks] == [1, 2, 3]  # regular season only
-    final = weeks[-1]["rankings"]
-    assert final[0]["team_id"] == "1" and final[0]["wins"] == 3
-    assert final[-1]["team_id"] == "4"
-    assert weeks[0]["rankings"][0]["prev_rank"] is None
-    assert all(r["prev_rank"] is not None for r in final)

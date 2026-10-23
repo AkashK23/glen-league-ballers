@@ -2,9 +2,9 @@
 import Base from "../../layouts/Base.astro";
 import StandingsTable from "../../components/StandingsTable.astro";
 import Matchup from "../../components/Matchup.astro";
-import PowerTable from "../../components/PowerTable.astro";
+import WrittenRanking from "../../components/WrittenRanking.astro";
 import Trophy from "../../components/Trophy.astro";
-import { type SeasonData, playoffRoundName, pts, seasonNotes, seasons, slug, url, weekUrl, writtenPowerRankings } from "../../lib/data";
+import { type SeasonData, playoffRoundName, pts, seasonNotes, seasons, slug, url, weekUrl, writtenRankings } from "../../lib/data";
 
 export function getStaticPaths() {
   return seasons.map((s) => ({ params: { year: String(s.year) }, props: { season: s } }));
@@ -12,7 +12,7 @@ export function getStaticPaths() {
 
 const { season: s } = Astro.props as { season: SeasonData };
 const notes = seasonNotes(s.year);
-const written = writtenPowerRankings(s.year);
+const written = writtenRankings(s.year).reverse(); // latest first
 const prev = seasons.find((x) => x.year === s.year - 1);
 const next = seasons.find((x) => x.year === s.year + 1);
 const seasonNumber = seasons.length - seasons.findIndex((x) => x.year === s.year);
@@ -39,7 +39,6 @@ const high = scores.reduce((a, b) => (b.score > a.score ? b : a), scores[0]);
 const low = scores.reduce((a, b) => (b.score < a.score ? b : a), scores[0]);
 const pfLeader = s.standings.reduce((a, b) => (b.points_for > a.points_for ? b : a), s.standings[0]);
 
-const power = s.power_rankings.slice().reverse(); // latest first
 const hasBids = s.draft.some((p) => p.bid_amount);
 const draftRounds = [...new Set(s.draft.map((p) => p.round))];
 ---
@@ -96,22 +95,15 @@ const draftRounds = [...new Set(s.draft.map((p) => p.round))];
   </div>
 
   {
-    (power.length > 0 || written.length > 0) && (
+    written.length > 0 && (
       <section id="power">
         <h2 class="section-title">Power Rankings</h2>
-        {written.map((w) => (
-          <details class="accordion">
-            <summary>{w.label}</summary>
-            <div class="body prose"><w.Content /></div>
+        {written.map((w, i) => (
+          <details class="accordion" id={`pr-${w.id}`} open={i === 0}>
+            <summary>{w.title}</summary>
+            <div class="body"><WrittenRanking ranking={w} season={s} /></div>
           </details>
         ))}
-        {power.map((w, i) => (
-          <details class="accordion" open={i === 0}>
-            <summary>Week {w.week}{i === 0 && (s.complete ? " · final regular season" : " · latest")}</summary>
-            <div class="body"><PowerTable rows={w.rankings} /></div>
-          </details>
-        ))}
-        <p class="muted small">Calculated each week from results: 80% two-step dominance (your wins, plus the wins of teams you beat), 15% points per game, 5% average margin.</p>
       </section>
     )
   }
@@ -196,6 +188,12 @@ const draftRounds = [...new Set(s.draft.map((p) => p.round))];
     )
   }
 </Base>
+
+<script is:inline>
+  // Links like /seasons/2026#pr-week-6 open that ranking.
+  const target = location.hash && document.querySelector(`details${CSS.escape(location.hash)}`);
+  if (target) target.open = true;
+</script>
 
 <style>
   .season-nav { display: flex; justify-content: space-between; margin-bottom: 24px; font-weight: 600; }

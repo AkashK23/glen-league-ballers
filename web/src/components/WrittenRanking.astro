@@ -1,0 +1,92 @@
+---
+// One hand-written power ranking, laid out like the original archive's
+// franchise rankings: "1: RUDA", stat lines, custom fields, then the write-up.
+import { type SeasonData, type WrittenRanking, blurbHtml, ordinal, pts, record, seasons, slug, url } from "../lib/data";
+
+interface Props {
+  ranking: WrittenRanking;
+  season: SeasonData;
+  limit?: number;
+}
+const { ranking: r, season: s, limit } = Astro.props;
+const entries = limit ? r.entries.slice(0, limit) : r.entries;
+const prevSeason = seasons.find((x) => x.year === s.year - 1);
+
+// Facts filled in from the data, so the writer only has to write the take.
+function facts(owner: string) {
+  const out: string[] = [];
+  if (r.week != null) {
+    const games = s.matchups.filter((m) => m.kind === "regular" && m.completed && m.away && m.week <= r.week!);
+    let w = 0, l = 0, t = 0, pf = 0, n = 0;
+    for (const m of games) {
+      const me = m.home.owner === owner ? m.home : m.away!.owner === owner ? m.away! : null;
+      if (!me) continue;
+      const opp = me === m.home ? m.away! : m.home;
+      n++; pf += me.score;
+      if (me.score > opp.score) w++; else if (me.score < opp.score) l++; else t++;
+    }
+    if (n) out.push(`Record: ${record(w, l, t)} · ${pts(pf / n)} PPG`);
+  } else if (prevSeason) {
+    const last = prevSeason.standings.find((x) => x.owner === owner);
+    if (last) out.push(`Last season: ${last.final_rank ? ordinal(last.final_rank) : "—"} (${record(last.wins, last.losses, last.ties)})`);
+  }
+  const titles = seasons.filter((x) => x.year < s.year && x.champion === owner).length;
+  if (titles) out.push(`Championships: ${titles}`);
+  return out;
+}
+---
+
+<div class="written">
+  {(r.author || r.date) && <p class="byline">{r.author && <>By {r.author}</>}{r.author && r.date && " · "}{r.date}</p>}
+  {!limit && <div class="intro prose"><r.Content /></div>}
+
+  {
+    entries.map((e, i) => {
+      const move = e.prev_rank == null ? null : e.prev_rank - e.rank;
+      return (
+        <>
+          {i > 0 && <div class="divider" aria-hidden="true">* &nbsp; * &nbsp; *</div>}
+          <article class="entry">
+            <h3 class="name">
+              <span class="rank">{e.rank}:</span> <a href={url(`/owners/${slug(e.owner)}`)}>{e.owner}</a>
+              {move != null && move !== 0 && <span class:list={["move", move > 0 ? "up" : "down"]}>{move > 0 ? `▲${move}` : `▼${-move}`}</span>}
+              {move === 0 && <span class="move">–</span>}
+            </h3>
+            <ul class="facts">
+              {facts(e.owner).map((f) => <li>{f}</li>)}
+              {Object.entries(e.extras).map(([k, v]) => <li><strong>{k}:</strong> {v}</li>)}
+            </ul>
+            {!limit && e.blurb && <div class="blurb prose" set:html={blurbHtml(e.blurb)} />}
+            {limit && e.blurb && <p class="teaser">{e.blurb.replace(/[*_\[\]]/g, "").split(/\n\s*\n/)[0].slice(0, 180)}{e.blurb.length > 180 ? "…" : ""}</p>}
+          </article>
+        </>
+      );
+    })
+  }
+</div>
+
+<style>
+  .byline { color: var(--muted); font-size: 0.85rem; margin: 0 0 12px; }
+  .intro :global(p) { margin: 0 0 1em; }
+  .entry { padding: 6px 0; }
+  .name {
+    font-size: 1.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--heading);
+    margin: 0 0 6px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .name a { color: var(--heading); }
+  .rank { color: var(--accent); }
+  .move { font-size: 0.75rem; font-weight: 700; color: var(--muted); letter-spacing: 0; }
+  .move.up { color: var(--win); }
+  .move.down { color: var(--loss); }
+  .facts { list-style: none; padding: 0; margin: 0 0 10px; font-size: 0.88rem; color: var(--text); }
+  .facts li { line-height: 1.7; }
+  .blurb :global(p) { margin: 0 0 0.9em; }
+  .teaser { margin: 0; color: var(--text); font-size: 0.9rem; }
+  .divider { text-align: center; color: var(--muted); letter-spacing: 0.2em; margin: 18px 0; }
+</style>

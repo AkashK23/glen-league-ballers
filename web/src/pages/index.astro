@@ -2,10 +2,10 @@
 import Base from "../layouts/Base.astro";
 import StandingsTable from "../components/StandingsTable.astro";
 import Matchup from "../components/Matchup.astro";
-import PowerTable from "../components/PowerTable.astro";
+import WrittenRanking from "../components/WrittenRanking.astro";
 import Trophy from "../components/Trophy.astro";
 import Toilet from "../components/Toilet.astro";
-import { type MatchupRow, completedSeasons, currentSeason, league, record, slug, url } from "../lib/data";
+import { type MatchupRow, completedSeasons, currentSeason, league, record, slug, url, writtenRankings } from "../lib/data";
 
 const reigning = completedSeasons[0];
 const champRow = reigning?.standings.find((t) => t.final_rank === 1);
@@ -13,7 +13,7 @@ const oldestFirst = completedSeasons.slice().reverse();
 
 let currentWeek = 0;
 let latestGames: MatchupRow[] = [];
-const power = currentSeason?.power_rankings.at(-1);
+const latestRanking = currentSeason ? writtenRankings(currentSeason.year).at(-1) : undefined;
 if (currentSeason) {
   const played = currentSeason.matchups.filter((m) => m.completed && m.kind === "regular");
   currentWeek = Math.max(0, ...played.map((m) => m.week));
@@ -48,12 +48,12 @@ if (currentSeason) {
     currentSeason && (
       <section>
         <h2 class="section-title">The {currentSeason.year} Season · Week {currentWeek}</h2>
-        <div class="grid grid-2">
-          {power && (
+        <div class:list={["grid", { "grid-2": latestRanking }]}>
+          {latestRanking && (
             <div class="card">
-              <h3>Power rankings</h3>
-              <PowerTable rows={power.rankings} limit={6} />
-              <a class="small" href={url(`/seasons/${currentSeason.year}#power`)}>All power rankings →</a>
+              <h3>Power rankings · {latestRanking.title}</h3>
+              <WrittenRanking ranking={latestRanking} season={currentSeason} limit={3} />
+              <a class="small" href={url(`/seasons/${currentSeason.year}#pr-${latestRanking.id}`)}>Read the full rankings →</a>
             </div>
           )}
           <div class="card">
