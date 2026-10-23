@@ -57,6 +57,7 @@ def season_detail(h: LeagueHistory, s: Season) -> dict:
                 "week": m.week,
                 "weeks": m.weeks,
                 "kind": m.kind.value,
+                "play_in": h.is_play_in(s, m),
                 "completed": is_completed(m),
                 "home": _side(h, s, m.home_team_id, m.home_score),
                 "away": _side(h, s, m.away_team_id, m.away_score),

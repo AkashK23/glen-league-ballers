@@ -112,12 +112,17 @@ def playoff_records(h: LeagueHistory, n: int = 10) -> dict:
         names[o.key] = o.name
         if t.final_rank == 1:
             agg[o.key]["championships"] += 1
-        if s.champion is not None and t.seed is not None and t.seed <= s.playoff_team_count:
+        if (
+            s.champion is not None
+            and t.seed is not None
+            and t.seed <= s.playoff_team_count
+            and t.team_id not in h.play_in_losers(s)
+        ):
             agg[o.key]["appearances"] += 1
 
     games = []
     for s, m, home, away in h.iter_matchups():
-        if m.kind != MatchupKind.PLAYOFF or away is None or not is_completed(m):
+        if m.kind != MatchupKind.PLAYOFF or away is None or not is_completed(m) or h.is_play_in(s, m):
             continue
         winner = m.winner_team_id
         for team_id, o, pts, opp, opp_pts in (

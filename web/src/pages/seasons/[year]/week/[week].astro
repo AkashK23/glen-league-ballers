@@ -18,9 +18,8 @@ const kindOrder = { playoff: 0, regular: 1, consolation: 2 } as const;
 const games = s.matchups
   .filter((m) => m.week === week && m.away)
   .sort((a, b) => kindOrder[a.kind] - kindOrder[b.kind]);
-const playoffWeeks = [...new Set(s.matchups.filter((m) => m.kind === "playoff").map((m) => m.week))].sort((a, b) => a - b);
 const isPlayoffWeek = games.some((m) => m.kind === "playoff");
-const title = isPlayoffWeek ? `${s.year} ${playoffRoundName(week, playoffWeeks)}` : `${s.year} · Week ${week}`;
+const title = isPlayoffWeek ? `${s.year} ${playoffRoundName(s, week)}` : `${s.year} · Week ${week}`;
 
 const starters = (l: LineupRow[]) => l.filter((p) => p.slot !== "BE" && p.slot !== "IR");
 const bench = (l: LineupRow[]) => l.filter((p) => p.slot === "BE" || p.slot === "IR");
@@ -46,7 +45,7 @@ const sum = (l: LineupRow[]) => l.reduce((t, p) => t + p.pts, 0);
       return (
         <article class="box card" id={`m-${m.id}`}>
           <div class="kind">
-            {m.kind === "playoff" ? <span class="pill gold">{playoffRoundName(week, playoffWeeks)}</span> : m.kind === "consolation" ? <span class="pill">Consolation</span> : null}
+            {m.kind === "playoff" ? <span class="pill gold">{playoffRoundName(s, week)}</span> : m.kind === "consolation" ? <span class="pill">Consolation</span> : null}
             {m.weeks > 1 && <span class="pill">{m.weeks}-week matchup</span>}
           </div>
           <header class="score">

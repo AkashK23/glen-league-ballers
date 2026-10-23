@@ -51,7 +51,7 @@ def cmd_sync(config: dict, data_dir: Path, years: list[int] | None) -> None:
 
 
 def cmd_build(config: dict, data_dir: Path, out_dir: Path) -> None:
-    history = LeagueHistory(load_seasons(data_dir), config.get("owners"))
+    history = LeagueHistory(load_seasons(data_dir), config.get("owners"), config.get("league", {}).get("play_in_seasons"))
     out_dir.mkdir(parents=True, exist_ok=True)
     for name, payload in build_site_data(history, config).items():
         path = out_dir / name

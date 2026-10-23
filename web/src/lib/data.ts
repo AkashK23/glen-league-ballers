@@ -30,6 +30,7 @@ export interface MatchupRow {
   week: number;
   weeks: number;
   kind: "regular" | "playoff" | "consolation";
+  play_in: boolean; // doesn't count toward playoff stats (league convention)
   completed: boolean;
   home: Side;
   away: Side | null;
@@ -148,9 +149,12 @@ export function versus(owner: string, opponent: string) {
   };
 }
 
-/** Labels for ESPN-style playoff rounds, counting back from the final. */
-export function playoffRoundName(week: number, playoffWeeks: number[]) {
-  const fromEnd = playoffWeeks.length - 1 - playoffWeeks.indexOf(week);
+/** Playoff round label for a week, counting back from the final. Play-in weeks are labelled separately. */
+export function playoffRoundName(season: SeasonData, week: number) {
+  const playoff = season.matchups.filter((m) => m.kind === "playoff");
+  if (playoff.some((m) => m.week === week && m.play_in)) return "Play-in";
+  const weeks = [...new Set(playoff.filter((m) => !m.play_in).map((m) => m.week))].sort((a, b) => a - b);
+  const fromEnd = weeks.length - 1 - weeks.indexOf(week);
   return ["Championship", "Semifinals", "Quarterfinals", "Wild Card"][fromEnd] ?? `Round ${week}`;
 }
 

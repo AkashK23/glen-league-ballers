@@ -32,7 +32,6 @@ const byWeek = (kind: string) => {
 const regularWeeks = byWeek("regular").filter(([, ms]) => ms.some((m) => m.completed));
 const playoffWeeks = byWeek("playoff");
 const consolationWeeks = byWeek("consolation");
-const playoffWeekNums = playoffWeeks.map(([w]) => w);
 const latestWeek = regularWeeks.at(-1)?.[0];
 
 const scores = s.matchups
@@ -119,7 +118,7 @@ const draftRounds = [...new Set(s.draft.map((p) => p.round))];
         <div class="bracket">
           {playoffWeeks.map(([week, ms]) => (
             <div class="round">
-              <h3>{playoffRoundName(week, playoffWeekNums)}</h3>
+              <h3>{playoffRoundName(s, week)}</h3>
               {ms.filter((m) => m.away).map((m) => <Matchup m={m} year={s.year} label={`Week ${week}`} />)}
               {ms.filter((m) => !m.away).map((m) => <div class="muted small">Bye: {m.home.owner}</div>)}
             </div>

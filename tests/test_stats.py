@@ -79,3 +79,27 @@ def test_storage_round_trip(tmp_path):
     [loaded] = load_seasons(tmp_path)
     assert loaded == _season(2025)
 
+
+
+def test_co_owner_credit_goes_to_the_main_owner():
+    s = _season(2022)
+    s.owners.append(Owner("M", "Mayur"))
+    s.teams[3].owner_ids = ["M", "D"]  # Mayur listed first on Dev's team
+    owners = {"mayur": {"name": "Mayur", "ids": ["M"], "defer_to_co_owner": True}}
+    assert LeagueHistory([s], owners).owner_of(s.teams[3]).name == "Dev"
+    assert LeagueHistory([s]).owner_of(s.teams[3]).name == "Mayur"  # default: first listed
+
+
+def test_play_in_games_do_not_count_toward_playoff_stats():
+    s = _season(2019)
+    # make week 4 a play-in (3 vs 4) and week 5 the real final (1 vs 3)
+    s.matchups[-2] = Matchup(4, "3", "4", 90, 80, MatchupKind.PLAYOFF)
+    s.matchups.append(Matchup(5, "1", "3", 120, 100, MatchupKind.PLAYOFF))
+    s.playoff_team_count = 4
+    with_rule = record_book(LeagueHistory([s], play_in_seasons=[2019]))["playoffs"]
+    rows = {r["owner"]: r for r in with_rule["most_championships"]}
+    assert (rows["Cara"]["wins"], rows["Cara"]["losses"]) == (0, 1)  # play-in win ignored
+    assert "Dev" not in rows  # lost the play-in: no playoff appearance or games
+    assert rows["Alice"]["wins"] == 1  # the final
+    without = {r["owner"]: r for r in record_book(LeagueHistory([s]))["playoffs"]["most_championships"]}
+    assert without["Cara"]["wins"] == 1 and without["Dev"]["appearances"] == 1
