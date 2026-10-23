@@ -1,0 +1,24 @@
+# League configuration. Secrets (ESPN cookies) go in .env, never here.
+
+[league]
+provider = "espn"          # swap to "sleeper", "yahoo", ... once a provider exists
+league_id = 0              # from your ESPN league URL: ...?leagueId=XXXXXX
+first_year = 2014
+
+# Canonical owners. Stats are keyed by person, not team name. `ids` lists every
+# platform account id that belongs to this person (ESPN member ids look like
+# "{ABCD-...}"; run `sync` once and look in data/seasons/*.json to find them).
+# Owners not listed here still show up, using the platform's name for them.
+#
+# [owners.ruda]
+# name = "Ruda"
+# ids = ["{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}"]
+
+# Featured rivalries for the Rivalries page (the full H2H grid is automatic).
+#
+# [[rivalries]]
+# owners = ["brian", "girish"]
+#
+# [[rivalries]]
+# owners = ["adit", "arnav"]
+# frozen_after = 2016
