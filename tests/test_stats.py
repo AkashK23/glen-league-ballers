@@ -103,3 +103,59 @@ def test_play_in_games_do_not_count_toward_playoff_stats():
     assert rows["Alice"]["wins"] == 1  # the final
     without = {r["owner"]: r for r in record_book(LeagueHistory([s]))["playoffs"]["most_championships"]}
     assert without["Cara"]["wins"] == 1 and without["Dev"]["appearances"] == 1
+
+
+def test_power_ranking_week_and_markdown():
+    from datetime import date
+
+    from league_core.power_model import Knobs
+    from league_core.power_rankings import compute, latest_final_week, to_markdown
+
+    s = _season(2026)
+    assert latest_final_week(s) == 3
+    s.matchups[3] = Matchup(2, "2", "4", 0, 0, MatchupKind.REGULAR)  # week 2 not played yet
+    assert latest_final_week(s) == 1
+
+    s = _season(2026)
+    h = LeagueHistory([s])
+    ctx = compute(h, s, 2, Knobs(n_sims=500), {"Alice": 2})
+    assert [t["owner"] for t in ctx["teams"]] == ["Alice", "Bob", "Cara", "Dev"]
+    alice = ctx["teams"][0]
+    assert (alice["record"], alice["allplay_record"], alice["prev_rank"]) == ("2-0", "5-1", 2)  # Bob's 125 beat her 120 in week 2
+    by_owner = {t["owner"]: t for t in ctx["teams"]}
+    assert by_owner["Alice"]["next_win_pct"] + by_owner["Dev"]["next_win_pct"] == 100  # week 3: Alice vs Dev
+    assert sum(t["playoff_pct"] for t in ctx["teams"]) == 200  # 2 playoff spots
+
+    narration = {
+        "intro": "Hi.",
+        "game_of_the_week": {"matchup": "Bob vs. Cara", "take": "Coin flip."},
+        "teams": {t["owner"]: {"headline": "Head", "blurb": "One.\n\nTwo: \"quoted\""} for t in ctx["teams"]},
+    }
+    md = to_markdown(ctx, narration, author="Bot", today=date(2026, 10, 1))
+    assert 'title: "Week 3"\nweek: 2\n' in md
+    assert '  - owner: "Alice"\n    extras:\n      "Power score": ' in md
+    assert '    blurb: |\n      **Head**\n\n      One.\n\n      Two: "quoted"\n' in md
+    assert "---\n\nHi.\n\n**Game of the week: Bob vs. Cara.** Coin flip.\n" in md
+
+
+def test_power_ranking_number_check():
+    from league_core.power_rankings import unsupported_numbers
+
+    prompt = "Alice 120.5 - Bob 98 (margin 22.5), playoff_pct 64, record 52-25"
+    narration = {
+        "intro": "Week 6 and 2 teams matter.",
+        "game_of_the_week": {"matchup": "Alice vs. Bob", "take": "64% says Alice."},
+        "teams": [
+            {"owner": "Alice", "headline": "Won by 22.5", "blurb": "120.5 points, 52-25 all-play."},
+            {"owner": "Bob", "headline": "Lost by 23.4", "blurb": "Scored 98.0, or 1,234 in spirit."},
+        ],
+    }
+    assert unsupported_numbers(narration, prompt) == {"Bob": ["23.4", "1,234"]}
+
+
+def test_power_model_backtest_runs():
+    from league_core.power_model import backtest
+
+    result = backtest([_season(2025), _season(2026)], start=2)
+    assert result["ytd_weight"][0.6]["games"] == 8  # weeks 2-3, two games a week, two seasons
+    assert 0 <= result["half_life"][3]["accuracy"] <= 1

@@ -16,6 +16,20 @@ short_name = "GLB"
 wordmark = "Glen League Archives"
 hero_title = "Welcome to the GLB Archives"
 
+# Weekly power rankings (`python -m league_core rank`): a stats model sets the
+# order and odds, and Claude (through the Claude Code CLI) writes the commentary.
+# Knobs below show their defaults; `python -m league_core backtest` shows how
+# each setting would have done.
+[power_rankings]
+author = "The Glen Bot"    # byline on every AI-written ranking
+model = "opus"             # Claude Code model alias or id: "opus", "sonnet", ...
+# ytd_weight = 0.6         # share of the power score from year-to-date metrics (rest is recent form)
+# recent_weeks = 3         # window for "recent" metrics
+# half_life = 3.0          # weeks; recency decay for each team's scoring estimate
+# prior_games = 2.0        # pseudo-games of league-average scoring to steady early-season estimates
+# proj_weight = 0.5        # how much to trust lineup projections for next week's odds (0-1)
+# n_sims = 10000           # season simulations for playoff odds
+
 # Canonical owners. Stats are keyed by person, not team name. `ids` lists every
 # platform account id that belongs to this person (ESPN member ids look like
 # "{ABCD-...}"; run `sync` once and look in data/seasons/*.json to find them).

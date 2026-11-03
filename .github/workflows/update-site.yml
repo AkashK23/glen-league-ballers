@@ -1,8 +1,9 @@
-# Weekly: pull the current season from the platform, commit the data, rebuild
-# and deploy the site to GitHub Pages.
+# Weekly: pull the current season from the platform, write that week's power
+# rankings, commit both, rebuild and deploy the site to GitHub Pages.
 #
 # Setup once the repo is on GitHub:
-#   Settings > Secrets and variables > Actions: add ESPN_S2 and ESPN_SWID
+#   Settings > Secrets and variables > Actions: add ESPN_S2 and ESPN_SWID, plus
+#     CLAUDE_CODE_OAUTH_TOKEN (from `claude setup-token`) for power rankings
 #   Settings > Pages > Source: "GitHub Actions"
 name: Update site
 
@@ -25,6 +26,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      HAS_CLAUDE: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v5
 
@@ -40,12 +43,21 @@ jobs:
           ESPN_SWID: ${{ secrets.ESPN_SWID }}
         run: python -m league_core sync --year "$(date +%Y)"
 
+      - name: Write power rankings
+        if: github.event_name != 'push' && env.HAS_CLAUDE == 'true'
+        continue-on-error: true # a failed write-up shouldn't hold back the stats
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          python -m league_core rank
+
       - name: Commit updated data
         if: github.event_name != 'push'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/seasons
+          git add data/seasons web/src/content/power-rankings
           git diff --cached --quiet || git commit -m "Sync $(date +%Y) season data"
           git push
 
